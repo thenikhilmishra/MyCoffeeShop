@@ -3,19 +3,60 @@
 @{
     ViewData["Title"] = "Log out";
 }
-
-<header>
-    <h1>@ViewData["Title"]</h1>
-    @{
-        if (User.Identity.IsAuthenticated)
-        {
-            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
-                <button type="submit" class="nav-link btn btn-link text-dark">Click here to Logout</button>
-            </form>
-        }
-        else
-        {
-            <p>You have successfully logged out of the application.</p>
-        }
+<style>
+    .logout-hero {
+        background: url('/images/mbr-1920x1372.jpg') center center/cover no-repeat;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
-</header>
+
+    .logout-overlay {
+        background: rgba(255,255,255,0.92);
+        padding: 2rem 2.5rem;
+        border-radius: 1.25rem;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+        max-width: 420px;
+        width: 90%;
+        border: 1px solid #e0e0e0;
+        text-align: center;
+    }
+
+    .logout-btn {
+        background-color: #d2a86a;
+        color: #fff;
+        font-weight: bold;
+        border: none;
+        transition: background 0.1s;
+    }
+
+        .logout-btn:hover,
+        .logout-btn:focus {
+            background-color: #b88a4a;
+            color: #fff;
+        }
+</style>
+
+<div class="logout-hero">
+    <div class="logout-overlay">
+        <h1 class="mb-3">@ViewData["Title"]</h1>
+        <p class="mb-4 text-muted">We hope to see you again soon! Enjoy your day with a great cup of coffee.</p>
+        @{
+            if (User.Identity.IsAuthenticated)
+            {
+                <form asp-area="Identity"
+                      asp-page="/Account/Logout"
+                      asp-route-returnUrl="@Url.Page("/", new { area = "" })"
+                      method="post"
+                      style="display: flex; justify-content: center;">
+                    <button type="submit" class="btn btn-lg logout-btn shadow">Click here to Logout</button>
+                </form>
+            }
+            else
+            {
+                <p>You have successfully logged out of the application.</p>
+            }
+        }
+    </div>
+</div>
