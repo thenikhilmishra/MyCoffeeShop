@@ -1,0 +1,65 @@
+﻿@page "{id:int}"
+@model CoffeeShop.Pages.Admin.EditProductModel
+@{
+    ViewData["Title"] = "Edit Product";
+}
+<div class="container mt-5" style="max-width:600px;">
+    <h2 class="mb-4">Edit Product</h2>
+
+    @if (!string.IsNullOrEmpty(Model.StatusMessage))
+    {
+        <div class="alert alert-success">@Model.StatusMessage</div>
+    }
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger">
+            @foreach (var modelError in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <div>@modelError.ErrorMessage</div>
+            }
+        </div>
+    }
+
+    <form method="post" enctype="multipart/form-data">
+        <input type="hidden" asp-for="Product.Id" />
+        <div class="mb-3">
+            <label asp-for="Product.Name" class="form-label"></label>
+            <input asp-for="Product.Name" class="form-control" />
+            <span asp-validation-for="Product.Name" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Product.Price" class="form-label"></label>
+            <input asp-for="Product.Price" class="form-control" type="number" step="0.01" />
+            <span asp-validation-for="Product.Price" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Product.Detail" class="form-label"></label>
+            <textarea asp-for="Product.Detail" class="form-control" rows="3"></textarea>
+            <span asp-validation-for="Product.Detail" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="ImageFile" class="form-label">Product Image</label>
+            <input asp-for="ImageFile" type="file" class="form-control" accept="image/*" />
+            <span asp-validation-for="ImageFile" class="text-danger"></span>
+            @if (!string.IsNullOrEmpty(Model.Product.ImageUrl))
+            {
+                <div class="mt-2">
+                    <img src="@Model.Product.ImageUrl" alt="@Model.Product.Name" width="100" />
+                </div>
+            }
+        </div>
+        <div class="form-check mb-3">
+            <input asp-for="Product.IsTrendingProduct" class="form-check-input" />
+            <label asp-for="Product.IsTrendingProduct" class="form-check-label"></label>
+        </div>
+        <div class="d-flex justify-content-center gap-2">
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <a asp-page="ManageProducts" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

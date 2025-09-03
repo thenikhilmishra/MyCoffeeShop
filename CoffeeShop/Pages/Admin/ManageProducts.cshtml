@@ -1,0 +1,111 @@
+﻿@page
+@model CoffeeShop.Pages.Admin.ManageProductsModel
+@{
+    ViewData["Title"] = "Manage Products";
+}
+<div class="container mt-5">
+    <h2 class="mb-4">Add New Product</h2>
+
+    @* Show only one alert: success/info or validation errors *@
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger text-center">
+            @foreach (var modelError in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <div>@modelError.ErrorMessage</div>
+            }
+        </div>
+    }
+    else if (!string.IsNullOrEmpty(Model.StatusMessage))
+    {
+        <div id="statusMessage" class="alert alert-success alert-dismissible fade show text-center" role="alert">
+            @Model.StatusMessage
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <form method="post" enctype="multipart/form-data" class="mb-5">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label asp-for="Product.Name" class="form-label"></label>
+                <input asp-for="Product.Name" class="form-control" />
+                <span asp-validation-for="Product.Name" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label asp-for="Product.Price" class="form-label"></label>
+                <input asp-for="Product.Price" class="form-control" type="number" step="0.01" />
+                <span asp-validation-for="Product.Price" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Product.Detail" class="form-label"></label>
+            <textarea asp-for="Product.Detail" class="form-control" rows="3"></textarea>
+            <span asp-validation-for="Product.Detail" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="ImageFile" class="form-label">Product Image</label>
+            <input asp-for="ImageFile" type="file" class="form-control" accept="image/*" />
+            <span asp-validation-for="ImageFile" class="text-danger"></span>
+        </div>
+        <div class="form-check mb-3">
+            <input asp-for="Product.IsTrendingProduct" class="form-check-input" />
+            <label asp-for="Product.IsTrendingProduct" class="form-check-label"></label>
+        </div>
+        <div class="d-flex justify-content-center gap-2">
+            <button type="submit" class="btn btn-success">Add Product</button>
+        </div>
+    </form>
+
+    <h3>Existing Products</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Detail</th>
+                <th>Price</th>
+                <th>Trending</th>
+                <th>Image</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in Model.Products)
+            {
+                <tr>
+                    <td>@p.Name</td>
+                    <td>@p.Detail</td>
+                    <td>@p.Price</td>
+                    <td>@(p.IsTrendingProduct ? "Yes" : "No")</td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(p.ImageUrl))
+                        {
+                            <img src="@p.ImageUrl" alt="@p.Name" width="60" />
+                        }
+                    </td>
+                    <td>
+                        <a asp-page="EditProduct" asp-route-id="@p.Id" class="btn btn-sm btn-primary">Edit</a>
+                        <form method="post" asp-page-handler="Delete" asp-route-id="@p.Id" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this product?');">
+                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            setTimeout(function () {
+                var msg = document.getElementById('statusMessage');
+                if (msg) {
+                    msg.style.transition = "opacity 0.5s";
+                    msg.style.opacity = 0;
+                    setTimeout(function () { msg.style.display = 'none'; }, 500);
+                }
+            }, 2500);
+        });
+    </script>
+}
