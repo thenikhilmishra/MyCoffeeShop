@@ -1,0 +1,67 @@
+@page
+@model CoffeeShop.Pages.Admin.OrdersModel
+@{
+    ViewData["Title"] = "Manage Orders";
+}
+<style>
+    .btn-purple {
+        background-color: #ae34eb;
+        color: #fff;
+        border: none;
+    }
+    .btn-purple:hover, .btn-purple:focus {
+            background-color: #ae34eb;
+        color: #fff;
+    }
+</style>
+<div class="container mt-5">
+    <h2>All Orders</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Order #</th>
+                <th>Customer</th>
+                <th>Date</th>
+                <th>Total</th>
+                <th>Details</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model.Orders)
+            {
+                <tr>
+                    <td>@order.Id</td>
+                    <td>@order.FirstName @order.LastName<br />@order.Email</td>
+                    <td>@order.OrderPlaced.ToLocalTime().ToString("g")</td>
+                    <td>@order.OrderTotal.ToString("C")</td>
+                    <td>
+                        <ul>
+                            @foreach (var detail in order.OrderDetails)
+                            {
+                                <li>@detail.Product?.Name x @detail.Quantity (@detail.Price.ToString("C") each)</li>
+                            }
+                        </ul>
+                    </td>
+                    <td>
+                        <form method="post" asp-page-handler="Approve" asp-route-id="@order.Id" style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-success"
+                                @(order.Status == "Approved" || order.Status == "Cancelled" ? "disabled" : "")>
+                                Approve
+                            </button>
+                        </form>
+                        <form method="post" asp-page-handler="Cancel" asp-route-id="@order.Id" style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-purple"
+                                @(order.Status == "Cancelled" || order.Status == "Approved" ? "disabled" : "")>
+                                Cancel
+                            </button>
+                        </form>
+                        <form method="post" asp-page-handler="Delete" asp-route-id="@order.Id" style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -3,6 +3,35 @@
 @{
     ViewData["Title"] = "Contact Notifications";
 }
+<style>
+    .btn-send {
+        background-color: #95eb34 !important;
+        color: #222 !important;
+        border: none;
+    }
+    .btn-send:hover, .btn-send:focus {
+        background-color: #7fd62a !important;
+        color: #111 !important;
+    }
+    .btn-markread {
+        background-color: #34aeeb !important;
+        color: #fff !important;
+        border: none;
+    }
+    .btn-markread:hover, .btn-markread:focus {
+        background-color: #228fc7 !important;
+        color: #fff !important;
+    }
+    .btn-delete {
+        background-color: #eb3477 !important;
+        color: #fff !important;
+        border: none;
+    }
+    .btn-delete:hover, .btn-delete:focus {
+        background-color: #c71c5a !important;
+        color: #fff !important;
+    }
+</style>
 <div class="container mt-5">
     <h2>Contact Messages</h2>
     @if (!string.IsNullOrEmpty(Model.StatusMessage))
@@ -42,18 +71,18 @@
                         <form method="post" asp-page-handler="Reply" class="d-flex">
                             <input type="hidden" name="id" value="@msg.Id" />
                             <input name="reply" class="form-control form-control-sm me-2" placeholder="Type reply..." />
-                            <button type="submit" class="btn btn-sm btn-primary">Send</button>
+                            <button type="submit" class="btn btn-sm btn-send">Send</button>
                         </form>
                     }
                 </td>
                 <td>
                     <form method="post" asp-page-handler="MarkRead" style="display:inline;">
                         <input type="hidden" name="id" value="@msg.Id" />
-                        <button type="submit" class="btn btn-sm btn-secondary" @(msg.IsRead ? "disabled" : "")>Mark as Read</button>
+                        <button type="submit" class="btn btn-sm btn-markread" @(msg.IsRead ? "disabled" : "")>Mark as Read</button>
                     </form>
                     <form method="post" asp-page-handler="Delete" style="display:inline;">
                         <input type="hidden" name="id" value="@msg.Id" />
-                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                        <button type="submit" class="btn btn-sm btn-delete">Delete</button>
                     </form>
                 </td>
             </tr>

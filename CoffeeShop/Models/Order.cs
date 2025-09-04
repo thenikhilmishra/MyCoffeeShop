@@ -11,5 +11,7 @@
         public decimal OrderTotal { get; set; }
         public DateTime OrderPlaced { get; set; }
         public List<OrderDetail>? OrderDetails { get; set; }
+        public string? UserId { get; set; }
+        public string? Status { get; set; } // Add this for order status
     }
 }
