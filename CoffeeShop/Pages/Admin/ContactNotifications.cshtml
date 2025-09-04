@@ -1,0 +1,77 @@
+@page
+@model CoffeeShop.Pages.Admin.ContactNotificationsModel
+@{
+    ViewData["Title"] = "Contact Notifications";
+}
+<div class="container mt-5">
+    <h2>Contact Messages</h2>
+    @if (!string.IsNullOrEmpty(Model.StatusMessage))
+    {
+        <div id="statusMessage" class="alert alert-success">@Model.StatusMessage</div>
+    }
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Message</th>
+                <th>Submitted At</th>
+                <th>Status</th>
+                <th>Reply</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var msg in Model.Messages)
+        {
+            <tr class="@(msg.IsRead ? "" : "table-warning")">
+                <td>@msg.Name</td>
+                <td>@msg.Email</td>
+                <td>@msg.Phone</td>
+                <td>@msg.Message</td>
+                <td>@msg.SubmittedAt.ToLocalTime().ToString("g")</td>
+                <td>@(msg.IsRead ? "Read" : "New")</td>
+                <td>
+                    @if (!string.IsNullOrEmpty(msg.AdminReply))
+                    {
+                        <span class="text-success">@msg.AdminReply</span>
+                    }
+                    else
+                    {
+                        <form method="post" asp-page-handler="Reply" class="d-flex">
+                            <input type="hidden" name="id" value="@msg.Id" />
+                            <input name="reply" class="form-control form-control-sm me-2" placeholder="Type reply..." />
+                            <button type="submit" class="btn btn-sm btn-primary">Send</button>
+                        </form>
+                    }
+                </td>
+                <td>
+                    <form method="post" asp-page-handler="MarkRead" style="display:inline;">
+                        <input type="hidden" name="id" value="@msg.Id" />
+                        <button type="submit" class="btn btn-sm btn-secondary" @(msg.IsRead ? "disabled" : "")>Mark as Read</button>
+                    </form>
+                    <form method="post" asp-page-handler="Delete" style="display:inline;">
+                        <input type="hidden" name="id" value="@msg.Id" />
+                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+@section Scripts {
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            var msg = document.getElementById('statusMessage');
+            if (msg) {
+                setTimeout(function () {
+                    msg.style.transition = "opacity 0.5s";
+                    msg.style.opacity = 0;
+                    setTimeout(function () { msg.style.display = 'none'; }, 500);
+                }, 2000);
+            }
+        });
+    </script>
+}

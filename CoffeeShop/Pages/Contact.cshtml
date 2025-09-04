@@ -1,0 +1,56 @@
+@page
+@model CoffeeShop.Pages.ContactModel
+@{
+    ViewData["Title"] = "Contact Us";
+}
+<div class="container mt-5" style="max-width:600px;">
+    <h2>Contact Us</h2>
+    @if (Model.SuccessMessage != null)
+    {
+        <div class="alert alert-success" id="statusMessage">@Model.SuccessMessage</div>
+    }
+    <form method="post" id="contactForm" autocomplete="off">
+        <div class="mb-3">
+            <label asp-for="Contact.Name" class="form-label"></label>
+            <input asp-for="Contact.Name" class="form-control" value="" />
+            <span asp-validation-for="Contact.Name" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Contact.Email" class="form-label"></label>
+            <input asp-for="Contact.Email" class="form-control" value="" />
+            <span asp-validation-for="Contact.Email" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Contact.Phone" class="form-label"></label>
+            <input asp-for="Contact.Phone" class="form-control" value="" />
+            <span asp-validation-for="Contact.Phone" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Contact.Message" class="form-label"></label>
+            <textarea asp-for="Contact.Message" class="form-control" rows="4"></textarea>
+            <span asp-validation-for="Contact.Message" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">Send Message</button>
+    </form>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            var msg = document.getElementById('statusMessage');
+            if (msg) {
+                // Reset the form fields
+                var form = document.getElementById('contactForm');
+                if (form) {
+                    form.reset();
+                }
+                // Hide the message after 2 seconds
+                setTimeout(function () {
+                    msg.style.transition = "opacity 0.5s";
+                    msg.style.opacity = 0;
+                    setTimeout(function () { msg.style.display = 'none'; }, 500);
+                }, 2000);
+            }
+        });
+    </script>
+}

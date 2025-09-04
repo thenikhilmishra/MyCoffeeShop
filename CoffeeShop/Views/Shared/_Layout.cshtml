@@ -1,10 +1,18 @@
-﻿@inject IHttpContextAccessor HttpContextAccessor
+﻿@using CoffeeShop.Models
+@inject IHttpContextAccessor HttpContextAccessor
+@inject CoffeeShop.Data.CoffeeShopDbContext DbContext
 @{
     var cartCount = HttpContextAccessor?.HttpContext?.Session.GetInt32("CartCount") ?? 0;
+    // Get unread messages count and latest messages for the bell dropdown
+    var unreadCount = DbContext.ContactMessages.Count(m => !m.IsRead);
+    var latestMessages = DbContext.ContactMessages
+        .OrderByDescending(m => m.SubmittedAt)
+        .Take(5)
+        .ToList();
 }
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <!-- Site made with Coffee Shop v5.7.8, https://mobirise.com -->
     <meta charset="UTF-8">
@@ -58,16 +66,31 @@
                     <ul class="navbar-nav nav-dropdown nav-right" data-app-modern-menu="true">
                         <li class="nav-item"><a class="nav-link link text-black show display-4" asp-controller="Home" asp-action="Index">Home</a></li>
                         <li class="nav-item"><a class="nav-link link text-black show display-4" asp-controller="Products" asp-action="Shop">Shop</a></li>
-                        <li class="nav-item"><a class="nav-link link text-black show display-4" href="page5.html">Contact</a></li>
-                        <li class="nav-item">
-                            <a class="nav-link link text-black show display-4" asp-page="/Admin/Login">Admin Login</a>
-                        </li>
+                        <li class="nav-item"><a class="nav-link link text-black show display-4" asp-page="/Contact">Contact Us</a></li>
+                        <li class="nav-item"><a class="nav-link link text-black show display-4" asp-page="/Admin/Login">Admin Login</a></li>
                         <partial name="_LoginPartial"></partial>
                         <li class="nav-item">
                             <a class="nav-link link text-black show display-4" asp-controller="ShoppingCart" asp-action="Index">
                                 <span class="mobi-mbri mobi-mbri-shopping-bag mbr-iconfont mbr-iconfont-btn"><small>(@cartCount)</small></span>
                             </a>
                         </li>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item d-flex align-items-center" style="margin-left: 8px;">
+                                <a class="nav-link position-relative p-0" asp-page="/Admin/ContactNotifications" title="Contact Notifications" style="display: flex; align-items: center; height: 40px;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="#2d295c" stroke-width="2" viewBox="0 0 24 24" style="display: block;">
+                                        <path d="M18 16v-5a6 6 0 10-12 0v5a2 2 0 01-2 2h16a2 2 0 01-2-2z"/>
+                                        <circle cx="12" cy="20" r="2"/>
+                                    </svg>
+                                    @if (unreadCount > 0)
+                                    {
+                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.7rem;">
+                                            @unreadCount
+                                        </span>
+                                    }
+                                </a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
