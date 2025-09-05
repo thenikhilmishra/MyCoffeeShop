@@ -4,24 +4,44 @@
 @inject UserManager<IdentityUser> UserManager
 
 <ul class="navbar-nav">
-@if (SignInManager.IsSignedIn(User))
-{
+    @if (SignInManager.IsSignedIn(User))
+    {
         <li class="nav-item dropdown">
-            <a class="nav-link link text-black dropdown-toggle show display-4" data-toggle="dropdown-submenu" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false"><span class="mobi-mbri mobi-mbri-user-2 mbr-iconfont mbr-iconfont-btn"></span></a>
-            <div class="dropdown-menu show" aria-labelledby="dropdown-751" data-bs-popper="none">
-                <a class="text-black show dropdown-item display-4" asp-area="Identity" asp-page="/Account/Logout">Logout</a>
-            </div>
+            <a class="nav-link link text-black dropdown-toggle show display-4"
+            data-toggle="dropdown-submenu"
+            data-bs-toggle="dropdown"
+            data-bs-auto-close="outside"
+            aria-expanded="false">
+                <span class="mobi-mbri mobi-mbri-user-2 mbr-iconfont mbr-iconfont-btn"></span>
+            </a>
+            @if (User.IsInRole("Admin"))
+            {
+                <div class="dropdown-menu show" aria-labelledby="dropdown-751" data-bs-popper="none">
+                    <a class="text-black show dropdown-item display-4" href="#">Admin Profile</a>
+                </div>
+            }
+            else
+            {
+                <div class="dropdown-menu show" aria-labelledby="dropdown-751" data-bs-popper="none">
+                    <a class="text-black show dropdown-item display-4" href="#">My Profile</a>
+                </div>
+            }
         </li>
-}
-else
-{
+    }
+    else
+    {
         <li class="nav-item dropdown">
-            <a class="nav-link link text-black dropdown-toggle show display-4" data-toggle="dropdown-submenu" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false"><span class="mobi-mbri mobi-mbri-user-2 mbr-iconfont mbr-iconfont-btn"></span></a>
+            <a class="nav-link link text-black dropdown-toggle show display-4"
+               data-toggle="dropdown-submenu"
+               data-bs-toggle="dropdown"
+               data-bs-auto-close="outside"
+               aria-expanded="false">
+                <span class="mobi-mbri mobi-mbri-user-2 mbr-iconfont mbr-iconfont-btn"></span>
+            </a>
             <div class="dropdown-menu show" aria-labelledby="dropdown-751" data-bs-popper="none">
                 <a class="text-black show dropdown-item display-4" asp-area="Identity" asp-page="/Account/Register">Register</a>
-                <a class="text-black show dropdown-item display-4" asp-area="Identity" asp-page="/Account/Login">Login</a>
                 <a class="text-black show dropdown-item display-4" asp-page="/Admin/Login">Admin Login</a>
             </div>
         </li>
-}
+    }
 </ul>
