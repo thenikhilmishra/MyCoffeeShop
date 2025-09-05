@@ -27,6 +27,12 @@ builder.Services.AddRazorPages();
 var app = builder.Build();
 app.UseSession();
 
+app.MapPost("/api/logout", async (SignInManager<IdentityUser> signInManager) =>
+{
+    await signInManager.SignOutAsync();
+    return Results.Json(new { success = true });
+});
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -57,7 +63,7 @@ using (var scope = app.Services.CreateScope())
 
     string adminRole = "Admin";
     string adminEmail = "admin@coffeeshop.com";
-    string adminPassword = "Admin@123"; // Change after first login
+    string adminPassword = "Admin@123";
 
     // Create Admin role if it doesn't exist
     if (!await roleManager.RoleExistsAsync(adminRole))
