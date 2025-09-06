@@ -1,0 +1,23 @@
+@page
+@model AdminProfileModel
+@{
+    ViewData["Title"] = "Admin Profile";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Admin Info</h4>
+                    <p><strong>Name:</strong> @Model.AdminInfo.UserName</p>
+                    <p><strong>Email:</strong> @Model.AdminInfo.Email</p>
+                    <a class="btn btn-primary" asp-page="/Admin/EditProfile">Edit Profile</a>
+                    <a class="btn btn-secondary" asp-page="/Admin/ChangePassword">Change Password</a>
+                    <a class="btn btn-info" asp-page="/Admin/ManageProducts">Manage Products</a>
+                    <a class="btn btn-info" asp-page="/Admin/Orders">Manage Orders</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

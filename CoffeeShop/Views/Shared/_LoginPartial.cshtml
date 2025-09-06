@@ -17,13 +17,13 @@
             @if (User.IsInRole("Admin"))
             {
                 <div class="dropdown-menu show" aria-labelledby="dropdown-751" data-bs-popper="none">
-                    <a class="text-black show dropdown-item display-4" href="#">Admin Profile</a>
+                    <a class="text-black show dropdown-item display-4" asp-page="/Admin/Profile">Admin Profile</a>
                 </div>
             }
             else
             {
                 <div class="dropdown-menu show" aria-labelledby="dropdown-751" data-bs-popper="none">
-                    <a class="text-black show dropdown-item display-4" href="#">My Profile</a>
+                    <a class="text-black show dropdown-item display-4" asp-page="/Profile">My Profile</a>
                 </div>
             }
         </li>
