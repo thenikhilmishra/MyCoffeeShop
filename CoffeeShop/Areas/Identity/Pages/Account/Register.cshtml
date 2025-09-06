@@ -1,67 +1,186 @@
 ﻿@page
-@model RegisterModel
+@model CoffeeShop.Areas.Identity.Pages.Account.RegisterModel
+@{
+    ViewData["Title"] = "Sign Up";
+}
 
 <style>
-    .logout-hero {
-        background: url('/images/tetiana-shyshkina-4lqjr8gu-bg-unsplash-815x1222.jpg') center center/cover no-repeat;
+    body, html {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    .register-bg {
+        background: url('/images/coffee-beans-2258839-960.jpg') center center/cover no-repeat;
         min-height: 100vh;
+        width: 100vw;
         display: flex;
         align-items: center;
         justify-content: center;
     }
-
-    .logout-overlay {
-        background: rgba(255,255,255,0.92);
-        padding: 2rem 2.5rem;
-        border-radius: 1.25rem;
-        box-shadow: 0 4px 24px rgba(0,0,0,0.10);
-        max-width: 420px;
-        width: 90%;
-        border: 1px solid #e0e0e0;
+    .register-card {
+        max-width: 500px;
+        width: 100%;
+        border-radius: 28px;
+        box-shadow: 0 12px 40px rgba(44, 41, 92, 0.22);
+        background: rgba(255,255,255,0.40);
+        backdrop-filter: blur(24px);
+        padding: 2.8rem 2.2rem 2.2rem 2.2rem;
+        margin: 48px 0;
+        border: 1.5px solid rgba(210,168,106,0.18);
+        transition: box-shadow 0.2s;
+    }
+    .register-header {
+        color: #b88a4a;
+        font-size: 2.5rem;
+        font-weight: 800;
+        letter-spacing: 1px;
         text-align: center;
+        margin-bottom: 2rem;
+        text-shadow: 0 2px 8px rgba(44,41,92,0.08);
     }
-
-    .logout-btn {
-        background-color: #d2a86a;
+    .form-label {
+        font-weight: 700;
+        color: #2d295c;
+        font-size: 1.1rem;
+        margin-bottom: 0.3rem;
+    }
+    .form-control {
+        font-size: 1.1rem;
+        border-radius: 10px;
+        border: 1.5px solid #e0e0e0;
+        box-shadow: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        background: rgba(255,255,255,0.7);
+    }
+    .form-control:focus {
+        border-color: #d2a86a;
+        box-shadow: 0 0 0 2px rgba(210,168,106,0.15);
+    }
+    .btn-register {
+        background: linear-gradient(90deg, #06c20c 0%, #d2a86a 100%);
         color: #fff;
-        font-weight: bold;
+        font-weight: 700;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(44, 41, 92, 0.08);
         border: none;
-        transition: background 0.1s;
+        font-size: 1.2rem;
+        padding: 0.7rem 0;
+        transition: background 0.2s, box-shadow 0.2s;
     }
-
-        .logout-btn:hover,
-        .logout-btn:focus {
-            background-color: #b88a4a;
-            color: #fff;
-        }
+    .btn-register:hover, .btn-register:focus {
+        background: linear-gradient(90deg, #d2a86a 0%, #06c20c 100%);
+        color: #fff;
+        box-shadow: 0 4px 16px rgba(44,41,92,0.12);
+    }
+    .password-wrapper {
+        position: relative;
+    }
+    .password-input {
+        padding-right: 40px;
+    }
+    .toggle-password {
+        position: absolute;
+        top: 50%;
+        right: 12px;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        color: #2d295c;
+        font-size: 1.3rem;
+        z-index: 2;
+        transition: color 0.2s;
+    }
+    .toggle-password:focus {
+        outline: none;
+        color: #d2a86a;
+    }
+    @@media (max-width: 600px) {
+        .register-card { max-width: 98vw; margin: 16px auto; padding: 1.2rem 0.5rem; }
+        .register-header { font-size: 1.5rem; }
+    }
 </style>
 
-<div class="logout-hero">
-    <div class="logout-overlay">
-        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h2 class="mb-3">Create a new account.</h2>
-            <hr />
-            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                <label asp-for="Input.Email">Email</label>
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
-            </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label asp-for="Input.Password">Password</label>
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
-            </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label asp-for="Input.ConfirmPassword">Confirm Password</label>
-                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-            </div>
-            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg logout-btn shadow">Register</button>
-        </form>
+<div class="register-bg">
+    <div class="register-card">
+        <div class="register-header">
+            Sign Up
+        </div>
+        <div class="register-body">
+            <form method="post" autocomplete="off">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label asp-for="Input.FirstName" class="form-label">First Name</label>
+                        <input asp-for="Input.FirstName" class="form-control" placeholder="Enter your first name" required />
+                        <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Input.LastName" class="form-label">Last Name</label>
+                        <input asp-for="Input.LastName" class="form-control" placeholder="Enter your last name" />
+                        <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Input.PhoneNumber" class="form-label">Phone Number</label>
+                        <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Enter your Phone No" required />
+                        <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Input.Email" class="form-label">Email</label>
+                        <input asp-for="Input.Email" type="email" class="form-control" placeholder="Enter your email" required autocomplete="off" />
+                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Input.Password" class="form-label">Password</label>
+                        <div class="password-wrapper">
+                            <input asp-for="Input.Password" type="password" class="form-control password-input" placeholder="Enter your Pword" required autocomplete="new-password" id="passwordInput" />
+                            <button type="button" class="toggle-password" onclick="togglePassword('passwordInput', this)">
+                                <i class="fa fa-eye"></i>
+                            </button>
+                        </div>
+                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Input.ConfirmPassword" class="form-label">Confirm Password</label>
+                        <div class="password-wrapper">
+                            <input asp-for="Input.ConfirmPassword" type="password" class="form-control password-input" placeholder="Confirm your Pword" required autocomplete="new-password" id="confirmPasswordInput" />
+                            <button type="button" class="toggle-password" onclick="togglePassword('confirmPasswordInput', this)">
+                                <i class="fa fa-eye"></i>
+                            </button>
+                        </div>
+                        <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                    </div>
+                    <div class="col-12">
+                        <label asp-for="Input.Address" class="form-label">Address</label>
+                        <textarea asp-for="Input.Address" class="form-control" rows="2" placeholder="Enter your address" required></textarea>
+                        <span asp-validation-for="Input.Address" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center mt-4">
+                    <button type="submit" class="btn btn-register btn-lg px-4 shadow-sm">Sign Up</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script>
+        function togglePassword(inputId, btn) {
+            var input = document.getElementById(inputId);
+            var icon = btn.querySelector('i');
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = "password";
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+    </script>
 }

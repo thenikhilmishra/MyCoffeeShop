@@ -1,8 +1,9 @@
 using CoffeeShop.Data;
+using CoffeeShop.Models;
 using CoffeeShop.Models.Interfaces;
 using CoffeeShop.Models.Services;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,10 +17,11 @@ builder.Services.AddDbContext<CoffeeShopDbContext>(option =>
     option.UseSqlServer(builder.Configuration.GetConnectionString("CoffeeShopConnection")));
 
 // Add Identity with Roles
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<CoffeeShopDbContext>();
 
+builder.Services.AddScoped<SignInManager<ApplicationUser>>();
 builder.Services.AddSession();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddRazorPages();
@@ -27,7 +29,7 @@ builder.Services.AddRazorPages();
 var app = builder.Build();
 app.UseSession();
 
-app.MapPost("/api/logout", async (SignInManager<IdentityUser> signInManager) =>
+app.MapPost("/api/logout", async (SignInManager<ApplicationUser> signInManager) =>
 {
     await signInManager.SignOutAsync();
     return Results.Json(new { success = true });
@@ -58,29 +60,47 @@ app.MapRazorPages();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
+    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
     string adminRole = "Admin";
     string adminEmail = "admin@coffeeshop.com";
     string adminPassword = "Admin@123";
 
-    // Create Admin role if it doesn't exist
     if (!await roleManager.RoleExistsAsync(adminRole))
     {
         await roleManager.CreateAsync(new IdentityRole(adminRole));
     }
 
-    // Create Admin user if it doesn't exist
-    var adminUser = await userManager.FindByEmailAsync(adminEmail);
+    ApplicationUser? adminUser = null;
+    try
+    {
+        adminUser = await userManager.FindByEmailAsync(adminEmail);
+    }
+    catch (System.Data.SqlTypes.SqlNullValueException ex)
+    {
+        // Log the error and optionally clean up the database
+        // For now, treat as if user does not exist
+        adminUser = null;
+    }
+
     if (adminUser == null)
     {
-        adminUser = new IdentityUser
+        adminUser = new ApplicationUser
         {
             UserName = adminEmail,
             Email = adminEmail,
-            EmailConfirmed = true
+            EmailConfirmed = true,
+            Address = "Default Address",
+            FirstName = "Admin",         // Ensure non-null value
+            LastName = "User"            // Ensure non-null value
         };
+
+        // Defensive: Ensure no required property is null
+        adminUser.Address ??= "Default Address";
+        adminUser.FirstName ??= "Admin";
+        adminUser.LastName ??= "User";
+
         var result = await userManager.CreateAsync(adminUser, adminPassword);
         if (result.Succeeded)
         {
@@ -89,7 +109,6 @@ using (var scope = app.Services.CreateScope())
     }
     else
     {
-        // Ensure user is in Admin role
         if (!await userManager.IsInRoleAsync(adminUser, adminRole))
         {
             await userManager.AddToRoleAsync(adminUser, adminRole);

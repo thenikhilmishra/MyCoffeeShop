@@ -1,18 +1,19 @@
+using CoffeeShop.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 [Authorize(Roles = "Admin")]
 public class AdminProfileModel : PageModel
 {
-    private readonly UserManager<IdentityUser> _userManager;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public AdminProfileModel(UserManager<IdentityUser> userManager)
+    public AdminProfileModel(UserManager<ApplicationUser> userManager)
     {
         _userManager = userManager;
     }
 
-    public IdentityUser? AdminInfo { get; set; }
+    public ApplicationUser? AdminInfo { get; set; }
 
     public async Task OnGetAsync()
     {

@@ -10,12 +10,19 @@
         border: none;
     }
     .btn-purple:hover, .btn-purple:focus {
-            background-color: #ae34eb;
+        background-color: #ae34eb;
         color: #fff;
     }
 </style>
 <div class="container mt-5">
     <h2>All Orders</h2>
+    @if (!string.IsNullOrEmpty(Model.StatusMessage))
+    {
+        <div id="statusMessage" class="alert alert-success alert-dismissible fade show text-center" role="alert">
+            @Model.StatusMessage
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -65,3 +72,18 @@
         </tbody>
     </table>
 </div>
+
+@section Scripts {
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            setTimeout(function () {
+                var msg = document.getElementById('statusMessage');
+                if (msg) {
+                    msg.style.transition = "opacity 0.5s";
+                    msg.style.opacity = 0;
+                    setTimeout(function () { msg.style.display = 'none'; }, 500);
+                }
+            }, 2500);
+        });
+    </script>
+}

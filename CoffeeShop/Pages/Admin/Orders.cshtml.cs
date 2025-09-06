@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace CoffeeShop.Pages.Admin
 {
@@ -18,6 +19,9 @@ namespace CoffeeShop.Pages.Admin
         }
 
         public List<Order> Orders { get; set; } = new();
+
+        [TempData]
+        public string StatusMessage { get; set; }
 
         public async Task OnGetAsync()
         {
@@ -35,6 +39,7 @@ namespace CoffeeShop.Pages.Admin
             {
                 order.Status = "Approved";
                 await _context.SaveChangesAsync();
+                StatusMessage = "Order approved";
             }
             return RedirectToPage();
         }
@@ -46,6 +51,7 @@ namespace CoffeeShop.Pages.Admin
             {
                 order.Status = "Cancelled";
                 await _context.SaveChangesAsync();
+                StatusMessage = "Order cancelled";
             }
             return RedirectToPage();
         }
@@ -58,9 +64,11 @@ namespace CoffeeShop.Pages.Admin
 
             if (order != null)
             {
-                _context.OrderDetails.RemoveRange(order.OrderDetails);
+                if (order.OrderDetails != null)
+                    _context.OrderDetails.RemoveRange(order.OrderDetails);
                 _context.Orders.Remove(order);
                 await _context.SaveChangesAsync();
+                StatusMessage = "Order deleted";
             }
             return RedirectToPage();
         }

@@ -1,78 +1,163 @@
 ﻿@page
-@model LoginModel
+@model CoffeeShop.Areas.Identity.Pages.Account.LoginModel
 @{
-    ViewData["Title"] = "Log in";
+    ViewData["Title"] = "Login";
 }
+
 <style>
-    .logout-hero {
+    body, html {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    .login-bg {
         background: url('/images/coffee-beans-2258839-960.jpg') center center/cover no-repeat;
         min-height: 100vh;
+        width: 100vw;
         display: flex;
         align-items: center;
         justify-content: center;
     }
-
-    .logout-overlay {
-        background: rgba(255,255,255,0.92);
-        padding: 2rem 2.5rem;
-        border-radius: 1.25rem;
-        box-shadow: 0 4px 24px rgba(0,0,0,0.10);
-        max-width: 420px;
-        width: 90%;
-        border: 1px solid #e0e0e0;
+    .login-card {
+        max-width: 440px;
+        width: 100%;
+        border-radius: 28px;
+        box-shadow: 0 12px 40px rgba(44, 41, 92, 0.22);
+        background: rgba(255,255,255,0.40);
+        backdrop-filter: blur(24px);
+        padding: 2.8rem 2.2rem 2.2rem 2.2rem;
+        margin: 32px 0;
+        border: 1.5px solid rgba(210,168,106,0.18);
+        transition: box-shadow 0.2s;
+    }
+    .login-header {
+        color: #b88a4a;
+        font-size: 2.5rem;
+        font-weight: 800;
+        letter-spacing: 1px;
         text-align: center;
+        margin-bottom: 2rem;
+        text-shadow: 0 2px 8px rgba(44,41,92,0.08);
     }
-
-    .logout-btn {
-        background-color: #d2a86a;
+    .form-label {
+        font-weight: 700;
+        color: #2d295c;
+        font-size: 1.1rem;
+        margin-bottom: 0.3rem;
+    }
+    .form-control {
+        font-size: 1.1rem;
+        border-radius: 10px;
+        border: 1.5px solid #e0e0e0;
+        box-shadow: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        background: rgba(255,255,255,0.7);
+    }
+    .form-control:focus {
+        border-color: #d2a86a;
+        box-shadow: 0 0 0 2px rgba(210,168,106,0.15);
+    }
+    .btn-login {
+        background: linear-gradient(90deg, #06c20c 0%, #d2a86a 100%);
         color: #fff;
-        font-weight: bold;
+        font-weight: 700;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(44, 41, 92, 0.08);
         border: none;
-        transition: background 0.1s;
+        transition: background 0.2s, box-shadow 0.2s;
+        font-size: 1.2rem;
+        padding: 0.7rem 0;
     }
-
-        .logout-btn:hover,
-        .logout-btn:focus {
-            background-color: #b88a4a;
-            color: #fff;
-        }
+    .btn-login:hover, .btn-login:focus {
+        background: linear-gradient(90deg, #d2a86a 0%, #06c20c 100%);
+        color: #fff;
+        box-shadow: 0 4px 16px rgba(44,41,92,0.12);
+    }
+    .password-wrapper {
+        position: relative;
+    }
+    .password-input {
+        padding-right: 40px;
+    }
+    .toggle-password {
+        position: absolute;
+        top: 50%;
+        right: 12px;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        color: #2d295c;
+        font-size: 1.3rem;
+        z-index: 2;
+        transition: color 0.2s;
+    }
+    .toggle-password:focus {
+        outline: none;
+        color: #d2a86a;
+    }
+    .login-links {
+        margin-top: 1.5rem;
+        text-align: center;
+        font-size: 1rem;
+    }
+    .login-links a {
+        display: block;
+        margin: 0.3rem 0;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+    .login-links a.forgot {
+        color: #7d4802;
+    }
+    .login-links a.register {
+        color: #055078;
+    }
+    .login-links a.resend {
+        color: #2d295c;
+    }
+    .login-links a:hover {
+        text-decoration: underline;
+        color: #869481;
+    }
+    @@media (max-width: 600px) {
+        .login-card { max-width: 98vw; margin: 16px auto; padding: 1.2rem 0.5rem; }
+        .login-header { font-size: 1.5rem; }
+    }
 </style>
 
-<div class="logout-hero">
-    <div class="logout-overlay">
-        <h1 class="mb-3">@ViewData["Title"]</h1>
-        <form id="account" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+<div class="login-bg">
+    <div class="login-card">
+        <div class="login-header">
+            Login
+        </div>
+        <form method="post" autocomplete="off">
+            <div class="mb-3">
                 <label asp-for="Input.Email" class="form-label">Email</label>
+                <input asp-for="Input.Email" type="email" class="form-control" placeholder="Enter your email" required autocomplete="off" />
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
+            <div class="mb-3">
                 <label asp-for="Input.Password" class="form-label">Password</label>
+                <div class="password-wrapper">
+                    <input asp-for="Input.Password" type="password" class="form-control password-input" placeholder="Enter your password" required autocomplete="current-password" id="loginPasswordInput" />
+                    <button type="button" class="toggle-password" onclick="togglePassword('loginPasswordInput', this)">
+                        <i class="fa fa-eye"></i>
+                    </button>
+                </div>
                 <span asp-validation-for="Input.Password" class="text-danger"></span>
             </div>
-            <div class="checkbox mb-3">
-                <label asp-for="Input.RememberMe" class="form-label">
-                    <input class="form-check-input" asp-for="Input.RememberMe" />
-                    @Html.DisplayNameFor(m => m.Input.RememberMe)
-                </label>
+            <div class="mb-3 form-check">
+                <input asp-for="Input.RememberMe" class="form-check-input" />
+                <label asp-for="Input.RememberMe" class="form-check-label">Remember Me</label>
             </div>
-            <div>
-                <button id="login-submit" type="submit" class="w-100 btn btn-lg logout-btn shadow">Log in</button>
+            <div class="d-flex justify-content-center mt-4">
+                <button type="submit" class="btn btn-login btn-lg px-4 shadow-sm">Login</button>
             </div>
-            <br />
-            <div>
-                <p>
-                    <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
-                </p>
-                <p>
-                    <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
-                </p>
-                <p>
-                    <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
-                </p>
+            <div class="login-links">
+                <a asp-page="./ForgotPassword" class="forgot">Forgot your password?</a>
+                <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="register">Register as a new user</a>
             </div>
         </form>
     </div>
@@ -80,4 +165,20 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script>
+        function togglePassword(inputId, btn) {
+            var input = document.getElementById(inputId);
+            var icon = btn.querySelector('i');
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = "password";
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+    </script>
 }
