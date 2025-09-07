@@ -25,15 +25,15 @@ namespace CoffeeShop.Pages.Admin
 
         public class InputModel
         {
-            public string Id { get; set; }
+            public string Id { get; set; } = string.Empty;
             [Required]
-            public string FirstName { get; set; }
-            public string LastName { get; set; }
+            public string FirstName { get; set; } = string.Empty;
+            public string LastName { get; set; } = string.Empty;
             [Required]
             [EmailAddress]
-            public string Email { get; set; }
-            public string PhoneNumber { get; set; }
-            public string Address { get; set; }
+            public string Email { get; set; } = string.Empty;
+            public string PhoneNumber { get; set; } = string.Empty;
+            public string Address { get; set; } = string.Empty;
         }
 
         public async Task<IActionResult> OnGetAsync(string id)
@@ -47,12 +47,12 @@ namespace CoffeeShop.Pages.Admin
 
             Input = new InputModel
             {
-                Id = user.Id,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email,
-                PhoneNumber = user.PhoneNumber,
-                Address = user.Address
+                Id = user.Id ?? string.Empty,
+                FirstName = user.FirstName ?? string.Empty,
+                LastName = user.LastName ?? string.Empty,
+                Email = user.Email ?? string.Empty,
+                PhoneNumber = user.PhoneNumber ?? string.Empty,
+                Address = user.Address ?? string.Empty
             };
             return Page();
         }

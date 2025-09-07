@@ -77,7 +77,7 @@ using (var scope = app.Services.CreateScope())
     {
         adminUser = await userManager.FindByEmailAsync(adminEmail);
     }
-    catch (System.Data.SqlTypes.SqlNullValueException ex)
+    catch (System.Data.SqlTypes.SqlNullValueException)
     {
         // Log the error and optionally clean up the database
         // For now, treat as if user does not exist
