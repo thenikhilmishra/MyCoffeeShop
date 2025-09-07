@@ -3,63 +3,161 @@
 @{
     ViewData["Title"] = "Edit Product";
 }
-<div class="container mt-5" style="max-width:600px;">
-    <h2 class="mb-4">Edit Product</h2>
-
-    @if (!string.IsNullOrEmpty(Model.StatusMessage))
-    {
-        <div class="alert alert-success">@Model.StatusMessage</div>
+<style>
+    body, html {
+        height: 100%;
+        margin: 0;
+        padding: 0;
     }
-
-    @if (!ViewData.ModelState.IsValid)
-    {
-        <div class="alert alert-danger">
-            @foreach (var modelError in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-            {
-                <div>@modelError.ErrorMessage</div>
-            }
-        </div>
+    .edit-product-bg {
+        background: url('/images/coffee-beans-2258839-960.jpg') center center/cover no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+        min-height: 100vh;
+        width: 100vw;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
+    .edit-product-card {
+        max-width: 600px;
+        width: 100%;
+        border-radius: 28px;
+        box-shadow: 0 12px 40px rgba(44, 41, 92, 0.22);
+        background: rgba(255,255,255,0.40);
+        backdrop-filter: blur(24px);
+        padding: 2.8rem 2.2rem 2.2rem 2.2rem;
+        margin: 32px 0;
+        border: 1.5px solid rgba(210,168,106,0.18);
+        transition: box-shadow 0.2s;
+    }
+    .edit-product-header {
+        color: #0a4d4d;
+        font-size: 2.2rem;
+        font-weight: 800;
+        letter-spacing: 1px;
+        text-align: center;
+        margin-bottom: 2rem;
+        text-shadow: 0 2px 8px rgba(44,41,92,0.08);
+    }
+    .form-label {
+        font-weight: 700;
+        color: #0a4d4d;
+        font-size: 1.1rem;
+        margin-bottom: 0.3rem;
+    }
+    .form-control {
+        font-size: 1.1rem;
+        border-radius: 10px;
+        border: 1.5px solid #e0e0e0;
+        box-shadow: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        background: rgba(255,255,255,0.7);
+    }
+    .form-control:focus {
+        border-color: #0a4d4d;
+        box-shadow: 0 0 0 2px rgba(44,41,92,0.15);
+    }
+    .btn-save-product {
+        background: linear-gradient(90deg, #0fd6c9 0%, #ffb347 100%);
+        color: #fff;
+        font-weight: 700;
+        border-radius: 10px;
+        border: none;
+        transition: background 0.2s, box-shadow 0.2s;
+        font-size: 1.1rem;
+        padding: 0.7rem 2.2rem;
+        margin-right: 0.7rem;
+    }
+    .btn-save-product:hover, .btn-save-product:focus {
+        background: linear-gradient(90deg, #ffb347 0%, #0fd6c9 100%);
+        color: #fff;
+        box-shadow: 0 4px 16px rgba(44,41,92,0.12);
+    }
+    .btn-back-product {
+        background: linear-gradient(90deg, #a259c7 0%, #ffe259 100%);
+        color: #fff;
+        font-weight: 700;
+        border-radius: 10px;
+        border: none;
+        transition: background 0.2s, box-shadow 0.2s;
+        font-size: 1.1rem;
+        padding: 0.7rem 2.2rem;
+    }
+    .btn-back-product:hover, .btn-back-product:focus {
+        background: linear-gradient(90deg, #ffe259 0%, #a259c7 100%);
+        color: #fff;
+        box-shadow: 0 4px 16px rgba(44,41,92,0.12);
+    }
+    @@media (max-width: 900px) {
+        .edit-product-card { max-width: 98vw; margin: 16px auto; padding: 1.2rem 0.5rem; }
+        .edit-product-header { font-size: 1.3rem; }
+    }
+</style>
+<div class="edit-product-bg">
+    <div class="edit-product-card">
+        <div class="edit-product-header">Edit Product</div>
 
-    <form method="post" enctype="multipart/form-data">
-        <input type="hidden" asp-for="Product.Id" />
-        <div class="mb-3">
-            <label asp-for="Product.Name" class="form-label"></label>
-            <input asp-for="Product.Name" class="form-control" />
-            <span asp-validation-for="Product.Name" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="Product.Price" class="form-label"></label>
-            <input asp-for="Product.Price" class="form-control" type="number" step="0.01" />
-            <span asp-validation-for="Product.Price" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="Product.Detail" class="form-label"></label>
-            <textarea asp-for="Product.Detail" class="form-control" rows="3"></textarea>
-            <span asp-validation-for="Product.Detail" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="ImageFile" class="form-label">Product Image</label>
-            <input asp-for="ImageFile" type="file" class="form-control" accept="image/*" />
-            <span asp-validation-for="ImageFile" class="text-danger"></span>
-            @if (!string.IsNullOrEmpty(Model.Product.ImageUrl))
-            {
-                <div class="mt-2">
-                    <img src="@Model.Product.ImageUrl" alt="@Model.Product.Name" width="100" />
-                </div>
-            }
-        </div>
-        <div class="form-check mb-3">
-            <input asp-for="Product.IsTrendingProduct" class="form-check-input" />
-            <label asp-for="Product.IsTrendingProduct" class="form-check-label"></label>
-        </div>
-        <div class="d-flex justify-content-center gap-2">
-            <button type="submit" class="btn btn-primary">Save Changes</button>
-            <a asp-page="ManageProducts" class="btn btn-secondary">Cancel</a>
-        </div>
-    </form>
+        @if (!string.IsNullOrEmpty(Model.StatusMessage))
+        {
+            <div id="statusMessage" class="alert alert-success">@Model.StatusMessage</div>
+        }
+
+        <form method="post" enctype="multipart/form-data">
+            <input type="hidden" asp-for="Product.Id" />
+            <div class="mb-3">
+                <label asp-for="Product.Name" class="form-label"></label>
+                <input asp-for="Product.Name" class="form-control" />
+                <span asp-validation-for="Product.Name" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Product.Price" class="form-label"></label>
+                <input asp-for="Product.Price" class="form-control" type="number" step="0.01" />
+                <span asp-validation-for="Product.Price" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Product.Detail" class="form-label"></label>
+                <textarea asp-for="Product.Detail" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Product.Detail" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="ImageFile" class="form-label">Product Image</label>
+                <input asp-for="ImageFile" type="file" class="form-control" accept="image/*" />
+                <span asp-validation-for="ImageFile" class="text-danger"></span>
+                @if (!string.IsNullOrEmpty(Model.Product.ImageUrl))
+                {
+                    <div class="mt-2">
+                        <img src="@Model.Product.ImageUrl" alt="@Model.Product.Name" width="100" />
+                    </div>
+                }
+            </div>
+            <div class="mb-3 form-check">
+                <input asp-for="Product.IsTrendingProduct" class="form-check-input" />
+                <label asp-for="Product.IsTrendingProduct" class="form-check-label"></label>
+            </div>
+            <div class="d-flex justify-content-center gap-2">
+                <button type="submit" class="btn btn-save-product">Save Changes</button>
+                <a asp-page="ManageProducts" class="btn btn-back-product">Cancel</a>
+            </div>
+        </form>
+    </div>
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            var msg = document.getElementById('statusMessage');
+            if (msg) {
+                setTimeout(function () {
+                    msg.style.transition = "opacity 0.5s";
+                    msg.style.opacity = 0;
+                    setTimeout(function () {
+                        msg.style.display = 'none';
+                        window.location.href = '/Admin/ManageProducts';
+                    }, 500);
+                }, 2500);
+            }
+        });
+    </script>
 }

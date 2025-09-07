@@ -2,6 +2,7 @@
 using CoffeeShop.Models.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
 
 namespace CoffeeShop.Controllers
 {
@@ -10,10 +11,12 @@ namespace CoffeeShop.Controllers
     {
         private IOrderRepository orderRepository;
         private IShoppingCartRepository shopCartRepository;
-        public OrdersController(IOrderRepository orderRepository, IShoppingCartRepository shopCartRepository)
+        private readonly UserManager<ApplicationUser> _userManager;
+        public OrdersController(IOrderRepository orderRepository, IShoppingCartRepository shopCartRepository, UserManager<ApplicationUser> userManager)
         {
             this.orderRepository = orderRepository;
             this.shopCartRepository = shopCartRepository;
+            _userManager = userManager;
         }
 
         public IActionResult Checkout()
@@ -37,7 +40,14 @@ namespace CoffeeShop.Controllers
                 return View(order);
             }
 
-            order.UserId = User.Identity.Name; // Or use User.FindFirst(ClaimTypes.NameIdentifier)?.Value if using Identity
+            // Use Identity GUID for UserId
+            var userId = _userManager.GetUserId(User);
+            order.UserId = userId;
+            // Always store email in lowercase
+            if (!string.IsNullOrEmpty(order.Email))
+            {
+                order.Email = order.Email.ToLowerInvariant();
+            }
             orderRepository.PlaceOrder(order);
             shopCartRepository.ClearCart();
             HttpContext.Session.SetInt32("CartCount", 0);

@@ -25,8 +25,11 @@ public class ProfileModel : PageModel
         UserInfo = await _userManager.GetUserAsync(User);
         if (UserInfo != null)
         {
+            var email = UserInfo.Email?.ToLowerInvariant();
             Orders = await _context.Orders
-                .Where(o => o.UserId == UserInfo.Id)
+                .Where(o => o.Email == email)
+                .Include(o => o.OrderDetails)
+                .ThenInclude(d => d.Product)
                 .OrderByDescending(o => o.OrderPlaced)
                 .ToListAsync();
         }

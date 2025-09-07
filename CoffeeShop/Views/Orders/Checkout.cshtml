@@ -10,22 +10,39 @@
 }
 
 <style>
+    body, html {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    .checkout-bg {
+        background: url('/images/coffee-beans-2258839-960.jpg') center center/cover no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+        min-height: 100vh;
+        width: 100vw;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
     .checkout-card {
         max-width: 500px;
         margin: 48px auto;
         border-radius: 18px;
         box-shadow: 0 8px 32px rgba(44, 41, 92, 0.12);
         overflow: hidden;
-        background: #fff;
+        background: rgba(255,255,255,0.85);
     }
     .checkout-header {
-        background: #d2a86a;
+        background: linear-gradient(90deg, #00796b 0%, #ff9800 100%);
         color: #fff;
         padding: 1.5rem 2rem;
         font-size: 2rem;
         font-weight: 700;
         letter-spacing: 1px;
         text-align: center;
+        border-top-left-radius: 18px;
+        border-top-right-radius: 18px;
     }
     .checkout-body {
         padding: 2rem;
@@ -64,75 +81,92 @@
         padding-top: 0.7rem;
         margin-top: 0.7rem;
     }
+    .btn-place-order {
+        background: linear-gradient(90deg, #c62828 0%, #283593 100%);
+        color: #fff;
+        font-weight: 700;
+        border-radius: 10px;
+        border: none;
+        transition: background 0.2s, box-shadow 0.2s;
+        font-size: 1.2rem;
+        padding: 0.7rem 2.2rem;
+        box-shadow: 0 2px 8px rgba(44, 41, 92, 0.08);
+    }
+    .btn-place-order:hover, .btn-place-order:focus {
+        background: linear-gradient(90deg, #283593 0%, #c62828 100%);
+        color: #fff;
+        box-shadow: 0 4px 16px rgba(44,41,92,0.12);
+    }
     @@media (max-width: 600px) {
         .checkout-card { max-width: 98vw; margin: 16px auto; }
         .checkout-body { padding: 1rem; }
         .checkout-header { font-size: 1.3rem; padding: 1rem; }
     }
 </style>
-
-<div class="checkout-card">
-    <div class="checkout-header">
-        Checkout
-    </div>
-    <div class="checkout-body">
-        <form asp-action="Checkout" method="post" role="form" autocomplete="off">
-            <div class="row g-3">
-                <div class="col-md-6">
-                    <label asp-for="FirstName" class="form-label">First Name</label>
-                    <input asp-for="FirstName" class="form-control" required />
-                    <span asp-validation-for="FirstName" class="text-danger"></span>
-                </div>
-                <div class="col-md-6">
-                    <label asp-for="LastName" class="form-label">Last Name</label>
-                    <input asp-for="LastName" class="form-control" required />
-                    <span asp-validation-for="LastName" class="text-danger"></span>
-                </div>
-                <div class="col-md-6">
-                    <label asp-for="Email" class="form-label">Email</label>
-                    <input asp-for="Email" type="email" class="form-control" required />
-                    <span asp-validation-for="Email" class="text-danger"></span>
-                </div>
-                <div class="col-md-6">
-                    <label asp-for="Phone" class="form-label">Phone</label>
-                    <input asp-for="Phone" type="tel" class="form-control" required />
-                    <span asp-validation-for="Phone" class="text-danger"></span>
-                </div>
-                <div class="col-12">
-                    <label asp-for="Address" class="form-label">Address</label>
-                    <textarea asp-for="Address" class="form-control" rows="2" required></textarea>
-                    <span asp-validation-for="Address" class="text-danger"></span>
-                </div>
-            </div>
-
-            <div class="order-summary">
-                <div class="order-summary-title">Order Summary</div>
-                @if (cartItems != null && cartItems.Any())
-                {
-                    <ul class="order-summary-list">
-                        @foreach (var item in cartItems)
-                        {
-                            <li>
-                                <span>@item.Product.Name x @item.Qty</span>
-                                <span>@((item.Product.Price * item.Qty).ToString("C"))</span>
-                            </li>
-                        }
-                    </ul>
-                    <div class="order-summary-total">
-                        <span>Total</span>
-                        <span>@total.ToString("C")</span>
+<div class="checkout-bg">
+    <div class="checkout-card">
+        <div class="checkout-header">
+            Checkout
+        </div>
+        <div class="checkout-body">
+            <form asp-action="Checkout" method="post" role="form" autocomplete="off">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label asp-for="FirstName" class="form-label">First Name</label>
+                        <input asp-for="FirstName" class="form-control" required />
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
                     </div>
-                }
-                else
-                {
-                    <div class="text-danger">Your cart is empty.</div>
-                }
-            </div>
+                    <div class="col-md-6">
+                        <label asp-for="LastName" class="form-label">Last Name</label>
+                        <input asp-for="LastName" class="form-control" required />
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Email" class="form-label">Email</label>
+                        <input asp-for="Email" type="email" class="form-control" required />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Phone" class="form-label">Phone</label>
+                        <input asp-for="Phone" type="tel" class="form-control" required />
+                        <span asp-validation-for="Phone" class="text-danger"></span>
+                    </div>
+                    <div class="col-12">
+                        <label asp-for="Address" class="form-label">Address</label>
+                        <textarea asp-for="Address" class="form-control" rows="2" required></textarea>
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+                </div>
 
-            <div class="d-flex justify-content-end mt-4">
-                <button type="submit" class="btn btn-success btn-lg px-4 shadow-sm">Place Order</button>
-            </div>
-        </form>
+                <div class="order-summary">
+                    <div class="order-summary-title">Order Summary</div>
+                    @if (cartItems != null && cartItems.Any())
+                    {
+                        <ul class="order-summary-list">
+                            @foreach (var item in cartItems)
+                            {
+                                <li>
+                                    <span>@item.Product.Name x @item.Qty</span>
+                                    <span>@((item.Product.Price * item.Qty).ToString("C"))</span>
+                                </li>
+                            }
+                        </ul>
+                        <div class="order-summary-total">
+                            <span>Total</span>
+                            <span>@total.ToString("C")</span>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-danger">Your cart is empty.</div>
+                    }
+                </div>
+
+                <div class="d-flex justify-content-end mt-4">
+                    <button type="submit" class="btn btn-place-order">Place Order</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 

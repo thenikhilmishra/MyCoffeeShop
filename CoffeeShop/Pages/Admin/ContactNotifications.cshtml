@@ -4,91 +4,161 @@
     ViewData["Title"] = "Contact Notifications";
 }
 <style>
+    body, html {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    .contact-bg {
+        background: url('/images/coffee-beans-2258839-960.jpg') center center/cover no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+        min-height: 100vh;
+        width: 100vw;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .contact-card {
+        max-width: 1200px;
+        width: 100%;
+        border-radius: 28px;
+        box-shadow: 0 12px 40px rgba(44, 41, 92, 0.22);
+        background: rgba(255,255,255,0.40);
+        backdrop-filter: blur(24px);
+        padding: 2.8rem 2.2rem 2.2rem 2.2rem;
+        margin: 32px 0;
+        border: 1.5px solid rgba(210,168,106,0.18);
+        transition: box-shadow 0.2s;
+    }
+    .contact-header {
+        color: #0a4d4d;
+        font-size: 2.5rem;
+        font-weight: 800;
+        letter-spacing: 1px;
+        text-align: center;
+        margin-bottom: 2rem;
+        text-shadow: 0 2px 8px rgba(44,41,92,0.08);
+    }
+    .table {
+        background: rgba(255,255,255,0.7);
+        border-radius: 12px;
+        overflow: hidden;
+    }
     .btn-send {
-        background-color: #95eb34 !important;
-        color: #222 !important;
+        background: linear-gradient(90deg, #00796b 0%, #ff9800 100%);
+        color: #fff !important;
+        font-weight: 700;
+        border-radius: 10px;
         border: none;
+        transition: background 0.2s, box-shadow 0.2s;
+        font-size: 1rem;
+        padding: 0.4rem 1.2rem;
+        margin-right: 0.3rem;
+        box-shadow: 0 2px 8px rgba(44, 41, 92, 0.08);
     }
     .btn-send:hover, .btn-send:focus {
-        background-color: #7fd62a !important;
-        color: #111 !important;
+        background: linear-gradient(90deg, #ff9800 0%, #00796b 100%);
+        color: #fff !important;
+        box-shadow: 0 4px 16px rgba(44,41,92,0.12);
     }
     .btn-markread {
-        background-color: #34aeeb !important;
+        background: linear-gradient(90deg, #6a1b9a 0%, #fbc02d 100%);
         color: #fff !important;
+        font-weight: 700;
+        border-radius: 10px;
         border: none;
+        transition: background 0.2s, box-shadow 0.2s;
+        font-size: 1rem;
+        padding: 0.4rem 1.2rem;
+        margin-right: 0.3rem;
+        box-shadow: 0 2px 8px rgba(44, 41, 92, 0.08);
     }
     .btn-markread:hover, .btn-markread:focus {
-        background-color: #228fc7 !important;
+        background: linear-gradient(90deg, #fbc02d 0%, #6a1b9a 100%);
         color: #fff !important;
+        box-shadow: 0 4px 16px rgba(44,41,92,0.12);
     }
     .btn-delete {
-        background-color: #eb3477 !important;
+        background: linear-gradient(90deg, #c62828 0%, #283593 100%);
         color: #fff !important;
+        font-weight: 700;
+        border-radius: 10px;
         border: none;
+        transition: background 0.2s, box-shadow 0.2s;
+        font-size: 1rem;
+        padding: 0.4rem 1.2rem;
+        box-shadow: 0 2px 8px rgba(44, 41, 92, 0.08);
     }
     .btn-delete:hover, .btn-delete:focus {
-        background-color: #c71c5a !important;
+        background: linear-gradient(90deg, #283593 0%, #c62828 100%);
         color: #fff !important;
+        box-shadow: 0 4px 16px rgba(44,41,92,0.12);
+    }
+    @@media (max-width: 900px) {
+        .contact-card { max-width: 98vw; margin: 16px auto; padding: 1.2rem 0.5rem; }
+        .contact-header { font-size: 1.5rem; }
     }
 </style>
-<div class="container mt-5">
-    <h2>Contact Messages</h2>
-    @if (!string.IsNullOrEmpty(Model.StatusMessage))
-    {
-        <div id="statusMessage" class="alert alert-success">@Model.StatusMessage</div>
-    }
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Message</th>
-                <th>Submitted At</th>
-                <th>Status</th>
-                <th>Reply</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        @foreach (var msg in Model.Messages)
+<div class="contact-bg">
+    <div class="contact-card">
+        <div class="contact-header">Contact Messages</div>
+        @if (!string.IsNullOrEmpty(Model.StatusMessage))
         {
-            <tr class="@(msg.IsRead ? "" : "table-warning")">
-                <td>@msg.Name</td>
-                <td>@msg.Email</td>
-                <td>@msg.Phone</td>
-                <td>@msg.Message</td>
-                <td>@msg.SubmittedAt.ToLocalTime().ToString("g")</td>
-                <td>@(msg.IsRead ? "Read" : "New")</td>
-                <td>
-                    @if (!string.IsNullOrEmpty(msg.AdminReply))
-                    {
-                        <span class="text-success">@msg.AdminReply</span>
-                    }
-                    else
-                    {
-                        <form method="post" asp-page-handler="Reply" class="d-flex">
-                            <input type="hidden" name="id" value="@msg.Id" />
-                            <input name="reply" class="form-control form-control-sm me-2" placeholder="Type reply..." />
-                            <button type="submit" class="btn btn-sm btn-send">Send</button>
-                        </form>
-                    }
-                </td>
-                <td>
-                    <form method="post" asp-page-handler="MarkRead" style="display:inline;">
-                        <input type="hidden" name="id" value="@msg.Id" />
-                        <button type="submit" class="btn btn-sm btn-markread" @(msg.IsRead ? "disabled" : "")>Mark as Read</button>
-                    </form>
-                    <form method="post" asp-page-handler="Delete" style="display:inline;">
-                        <input type="hidden" name="id" value="@msg.Id" />
-                        <button type="submit" class="btn btn-sm btn-delete">Delete</button>
-                    </form>
-                </td>
-            </tr>
+            <div id="statusMessage" class="alert alert-success">@Model.StatusMessage</div>
         }
-        </tbody>
-    </table>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Message</th>
+                    <th>Submitted At</th>
+                    <th>Status</th>
+                    <th>Reply</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var msg in Model.Messages)
+            {
+                <tr class="@(msg.IsRead ? "" : "table-warning")">
+                    <td>@msg.Name</td>
+                    <td>@msg.Email</td>
+                    <td>@msg.Phone</td>
+                    <td>@msg.Message</td>
+                    <td>@msg.SubmittedAt.ToLocalTime().ToString("g")</td>
+                    <td>@(msg.IsRead ? "Read" : "New")</td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(msg.AdminReply))
+                        {
+                            <span class="text-success">@msg.AdminReply</span>
+                        }
+                        else
+                        {
+                            <form method="post" asp-page-handler="Reply" class="d-flex">
+                                <input type="hidden" name="id" value="@msg.Id" />
+                                <input name="reply" class="form-control form-control-sm me-2" placeholder="Type reply..." />
+                                <button type="submit" class="btn btn-sm btn-send">Send</button>
+                            </form>
+                        }
+                    </td>
+                    <td>
+                        <form method="post" asp-page-handler="MarkRead" style="display:inline;">
+                            <input type="hidden" name="id" value="@msg.Id" />
+                            <button type="submit" class="btn btn-sm btn-markread" @(msg.IsRead ? "disabled" : "")>Mark as Read</button>
+                        </form>
+                        <form method="post" asp-page-handler="Delete" style="display:inline;">
+                            <input type="hidden" name="id" value="@msg.Id" />
+                            <button type="submit" class="btn btn-sm btn-delete">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
 </div>
 @section Scripts {
     <script>

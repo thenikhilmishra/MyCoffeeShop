@@ -1,0 +1,148 @@
+﻿@page "{id}"
+@model CoffeeShop.Pages.Admin.EditUserModel
+@{
+    ViewData["Title"] = "Edit User";
+}
+<style>
+    body, html {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    .edit-user-bg {
+        background: url('/images/coffee-beans-2258839-960.jpg') center center/cover no-repeat;
+        min-height: 100vh;
+        width: 100vw;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .edit-user-card {
+        max-width: 600px;
+        width: 100%;
+        border-radius: 28px;
+        box-shadow: 0 12px 40px rgba(44, 41, 92, 0.22);
+        background: rgba(255,255,255,0.40);
+        backdrop-filter: blur(24px);
+        padding: 2.8rem 2.2rem 2.2rem 2.2rem;
+        margin: 32px 0;
+        border: 1.5px solid rgba(210,168,106,0.18);
+        transition: box-shadow 0.2s;
+    }
+    .edit-user-header {
+        color: #b88a4a;
+        font-size: 2.2rem;
+        font-weight: 800;
+        letter-spacing: 1px;
+        text-align: center;
+        margin-bottom: 2rem;
+        text-shadow: 0 2px 8px rgba(44,41,92,0.08);
+    }
+    .form-label {
+        font-weight: 700;
+        color: #2d295c;
+        font-size: 1.1rem;
+        margin-bottom: 0.3rem;
+    }
+    .form-control {
+        font-size: 1.1rem;
+        border-radius: 10px;
+        border: 1.5px solid #e0e0e0;
+        box-shadow: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        background: rgba(255,255,255,0.7);
+    }
+    .form-control:focus {
+        border-color: #2d295c;
+        box-shadow: 0 0 0 2px rgba(44,41,92,0.15);
+    }
+    .btn-save-user {
+        background: linear-gradient(90deg, #34aeeb 0%, #2d295c 100%);
+        color: #fff;
+        font-weight: 700;
+        border-radius: 10px;
+        border: none;
+        transition: background 0.2s, box-shadow 0.2s;
+        font-size: 1.1rem;
+        padding: 0.7rem 2.2rem;
+        margin-right: 0.7rem;
+    }
+    .btn-save-user:hover, .btn-save-user:focus {
+        background: linear-gradient(90deg, #2d295c 0%, #34aeeb 100%);
+        color: #fff;
+        box-shadow: 0 4px 16px rgba(44,41,92,0.12);
+    }
+    .btn-back-user {
+        background: linear-gradient(90deg, #eb3477 0%, #f9a07a 100%);
+        color: #fff;
+        font-weight: 700;
+        border-radius: 10px;
+        border: none;
+        transition: background 0.2s, box-shadow 0.2s;
+        font-size: 1.1rem;
+        padding: 0.7rem 2.2rem;
+    }
+    .btn-back-user:hover, .btn-back-user:focus {
+        background: linear-gradient(90deg, #f9a07a 0%, #eb3477 100%);
+        color: #fff;
+        box-shadow: 0 4px 16px rgba(44,41,92,0.12);
+    }
+    @@media (max-width: 900px) {
+        .edit-user-card { max-width: 98vw; margin: 16px auto; padding: 1.2rem 0.5rem; }
+        .edit-user-header { font-size: 1.3rem; }
+    }
+</style>
+<div class="edit-user-bg">
+    <div class="edit-user-card">
+        <div class="edit-user-header">Edit User</div>
+        @if (!string.IsNullOrEmpty(Model.StatusMessage))
+        {
+            <div id="statusMessage" class="alert alert-success">@Model.StatusMessage</div>
+        }
+        <form method="post">
+            <input type="hidden" asp-for="Input.Id" />
+            <div class="mb-3">
+                <label asp-for="Input.FirstName" class="form-label"></label>
+                <input asp-for="Input.FirstName" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label asp-for="Input.LastName" class="form-label"></label>
+                <input asp-for="Input.LastName" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label asp-for="Input.Email" class="form-label"></label>
+                <input asp-for="Input.Email" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label asp-for="Input.PhoneNumber" class="form-label"></label>
+                <input asp-for="Input.PhoneNumber" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label asp-for="Input.Address" class="form-label"></label>
+                <input asp-for="Input.Address" class="form-control" />
+            </div>
+            <div class="d-flex justify-content-center mt-4">
+                <button type="submit" class="btn btn-save-user">Save</button>
+                <a asp-page="ManageUsers" class="btn btn-back-user">Back</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            var msg = document.getElementById('statusMessage');
+            if (msg) {
+                setTimeout(function () {
+                    msg.style.transition = "opacity 0.5s";
+                    msg.style.opacity = 0;
+                    setTimeout(function () {
+                        msg.style.display = 'none';
+                        window.location.href = '/Admin/ManageUsers';
+                    }, 500);
+                }, 2500);
+            }
+        });
+    </script>
+}

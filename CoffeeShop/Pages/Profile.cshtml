@@ -1,49 +1,191 @@
 @page
 @model ProfileModel
+<style>
+    body, html {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    .profile-bg {
+        background: url('/images/coffee-beans-2258839-960.jpg') center center/cover no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+        min-height: 100vh;
+        width: 100vw;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .profile-card {
+        max-width: 1300px;
+        width: 100%;
+        border-radius: 28px;
+        box-shadow: 0 12px 40px rgba(44, 41, 92, 0.22);
+        background: rgba(255,255,255,0.40);
+        backdrop-filter: blur(24px);
+        padding: 2.8rem 2.2rem 2.2rem 2.2rem;
+        margin: 32px 0;
+        border: 1.5px solid rgba(210,168,106,0.18);
+        transition: box-shadow 0.2s;
+    }
+    .profile-header {
+        color: #0a4d4d;
+        font-size: 2.5rem;
+        font-weight: 800;
+        letter-spacing: 1px;
+        text-align: center;
+        margin-bottom: 2rem;
+        text-shadow: 0 2px 8px rgba(44,41,92,0.08);
+    }
+    .profile-info {
+        background: rgba(255,255,255,0.7);
+        border-radius: 18px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 16px rgba(44,41,92,0.10);
+    }
+    .profile-info h4 {
+        font-weight: 700;
+        color: #2d295c;
+        margin-bottom: 1.2rem;
+    }
+    .profile-info p {
+        font-size: 1.1rem;
+        margin-bottom: 0.7rem;
+    }
+    .btn-edit-profile {
+        background: linear-gradient(90deg, #00796b 0%, #ff9800 100%);
+        color: #fff;
+        font-weight: 700;
+        border-radius: 10px;
+        border: none;
+        margin-right: 0.7rem;
+        font-size: 1.1rem;
+        padding: 0.7rem 2.2rem;
+        box-shadow: 0 2px 8px rgba(44, 41, 92, 0.08);
+    }
+    .btn-edit-profile:hover, .btn-edit-profile:focus {
+        background: linear-gradient(90deg, #ff9800 0%, #00796b 100%);
+        color: #fff;
+        box-shadow: 0 4px 16px rgba(44,41,92,0.12);
+    }
+    .btn-change-password {
+        background: linear-gradient(90deg, #c62828 0%, #283593 100%);
+        color: #fff;
+        font-weight: 700;
+        border-radius: 10px;
+        border: none;
+        font-size: 1.1rem;
+        padding: 0.7rem 2.2rem;
+        box-shadow: 0 2px 8px rgba(44, 41, 92, 0.08);
+    }
+    .btn-change-password:hover, .btn-change-password:focus {
+        background: linear-gradient(90deg, #283593 0%, #c62828 100%);
+        color: #fff;
+        box-shadow: 0 4px 16px rgba(44,41,92,0.12);
+    }
+    .order-history-card {
+        background: rgba(255,255,255,0.7);
+        border-radius: 18px;
+        padding: 2rem;
+        box-shadow: 0 4px 16px rgba(44,41,92,0.10);
+    }
+    .order-history-card h4 {
+        font-weight: 700;
+        color: #2d295c;
+        margin-bottom: 1.2rem;
+    }
+    .order-details-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    .order-details-list li {
+        font-size: 1rem;
+        margin-bottom: 0.3rem;
+    }
+    .order-status-approved { color: #00796b; font-weight: 700; }
+    .order-status-cancelled { color: #c62828; font-weight: 700; }
+    .order-status-pending { color: #6a1b9a; font-weight: 700; }
+    @@media (max-width: 900px) {
+        .profile-card { max-width: 98vw; margin: 16px auto; padding: 1.2rem 0.5rem; }
+        .profile-header { font-size: 1.5rem; }
+    }
+</style>
 @{
     ViewData["Title"] = "My Profile";
 }
-
-<div class="container mt-4">
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title">Profile Info</h4>
-                    <p><strong>Name:</strong> @Model.UserInfo.FirstName @Model.UserInfo.LastName</p>
-                    <p><strong>Email:</strong> @Model.UserInfo.Email</p>
-                    <p><strong>Phone:</strong> @Model.UserInfo.PhoneNumber</p>
-                    <p><strong>Address:</strong> @Model.UserInfo.Address</p>
-                    <a class="btn btn-primary" asp-page="/EditProfile">Edit Profile</a>
-                    <a class="btn btn-secondary" asp-page="/ChangePassword">Change Password</a>
+<div class="profile-bg">
+    <div class="profile-card">
+        <div class="profile-header">My Profile</div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="profile-info">
+                    <h4>Profile Info</h4>
+                    <p><strong>Name:</strong> @Model.UserInfo?.FirstName @Model.UserInfo?.LastName</p>
+                    <p><strong>Email:</strong> @Model.UserInfo?.Email</p>
+                    <p><strong>Phone:</strong> @Model.UserInfo?.PhoneNumber</p>
+                    <p><strong>Address:</strong> @Model.UserInfo?.Address</p>
+                    <a class="btn btn-edit-profile" asp-page="/EditProfile">Edit Profile</a>
+                    <a class="btn btn-change-password" asp-page="/ChangePassword">Change Password</a>
                 </div>
             </div>
-        </div>
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title">Order History</h4>
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Order #</th>
-                                <th>Date</th>
-                                <th>Total</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var order in Model.Orders)
-                            {
+            <div class="col-md-8">
+                <div class="order-history-card">
+                    <h4>Order History</h4>
+                    @if (Model.Orders != null && Model.Orders.Any())
+                    {
+                        <table class="table table-bordered">
+                            <thead>
                                 <tr>
-                                    <td>@order.Id</td>
-                                    <td>@order.OrderPlaced.ToShortDateString()</td>
-                                    <td>@order.OrderTotal.ToString("C")</td>
-                                    <td>@order.Status</td>
+                                    <th>Date</th>
+                                    <th>Total</th>
+                                    <th>Details</th>
+                                    <th>Status</th>
                                 </tr>
-                            }
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                @foreach (var order in Model.Orders)
+                                {
+                                    <tr>
+                                        <td>@order.OrderPlaced.ToLocalTime().ToString("g")</td>
+                                        <td>@order.OrderTotal.ToString("C")</td>
+                                        <td>
+                                            <ul class="order-details-list">
+                                                @foreach (var detail in order.OrderDetails)
+                                                {
+                                                    <li>@detail.Product?.Name x @detail.Quantity (@detail.Price.ToString("C") each)</li>
+                                                }
+                                            </ul>
+                                        </td>
+                                        <td>
+                                            @if (order.Status == "Approved")
+                                            {
+                                                <span class="order-status-approved">Your order fulfilled</span>
+                                            }
+                                            else if (order.Status == "Cancelled")
+                                            {
+                                                <span class="order-status-cancelled">Sorry! Coffee is out</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="order-status-pending">Pending</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info d-flex flex-column align-items-center">
+                            <span>You have not placed any orders yet.</span>
+                            <a href="/Products/Shop" class="btn btn-success mt-3" style="font-weight:600;">
+                                Explore best Sips Now!
+                            </a>
+                        </div>
+                    }
                 </div>
             </div>
         </div>

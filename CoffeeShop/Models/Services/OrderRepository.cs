@@ -26,7 +26,8 @@ namespace CoffeeShop.Models.Services
                 };
                 order.OrderDetails.Add(orderDetail);
             }
-            order.OrderPlaced = DateTime.Now;
+            // Set order time to UTC
+            order.OrderPlaced = DateTime.UtcNow;
             order.OrderTotal = shoppingCartRepository.GetShoppingCartTotal();
             dbContext.Orders.Add(order);
             dbContext.SaveChanges();    

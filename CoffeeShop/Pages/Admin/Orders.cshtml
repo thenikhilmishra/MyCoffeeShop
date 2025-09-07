@@ -4,75 +4,162 @@
     ViewData["Title"] = "Manage Orders";
 }
 <style>
-    .btn-purple {
-        background-color: #ae34eb;
-        color: #fff;
-        border: none;
+    body, html {
+        height: 100%;
+        margin: 0;
+        padding: 0;
     }
-    .btn-purple:hover, .btn-purple:focus {
-        background-color: #ae34eb;
+    .orders-bg {
+        background: url('/images/coffee-beans-2258839-960.jpg') center center/cover no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+        min-height: 100vh;
+        width: 100vw;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .orders-card {
+        max-width: 1200px;
+        width: 100%;
+        border-radius: 28px;
+        box-shadow: 0 12px 40px rgba(44, 41, 92, 0.22);
+        background: rgba(255,255,255,0.40);
+        backdrop-filter: blur(24px);
+        padding: 2.8rem 2.2rem 2.2rem 2.2rem;
+        margin: 32px 0;
+        border: 1.5px solid rgba(210,168,106,0.18);
+        transition: box-shadow 0.2s;
+    }
+    .orders-header {
+        color: #0a4d4d;
+        font-size: 2.5rem;
+        font-weight: 800;
+        letter-spacing: 1px;
+        text-align: center;
+        margin-bottom: 2rem;
+        text-shadow: 0 2px 8px rgba(44,41,92,0.08);
+    }
+    .table {
+        background: rgba(255,255,255,0.7);
+        border-radius: 12px;
+        overflow: hidden;
+    }
+    .btn-approve-order {
+        background: linear-gradient(90deg, #00796b 0%, #ff9800 100%);
         color: #fff;
+        font-weight: 700;
+        border-radius: 10px;
+        border: none;
+        transition: background 0.2s, box-shadow 0.2s;
+        font-size: 1rem;
+        padding: 0.4rem 1.2rem;
+        margin-right: 0.3rem;
+        box-shadow: 0 2px 8px rgba(44, 41, 92, 0.08);
+    }
+    .btn-approve-order:hover, .btn-approve-order:focus {
+        background: linear-gradient(90deg, #ff9800 0%, #00796b 100%);
+        color: #fff;
+        box-shadow: 0 4px 16px rgba(44,41,92,0.12);
+    }
+    .btn-cancel-order {
+        background: linear-gradient(90deg, #6a1b9a 0%, #fbc02d 100%);
+        color: #fff;
+        font-weight: 700;
+        border-radius: 10px;
+        border: none;
+        transition: background 0.2s, box-shadow 0.2s;
+        font-size: 1rem;
+        padding: 0.4rem 1.2rem;
+        margin-right: 0.3rem;
+        box-shadow: 0 2px 8px rgba(44, 41, 92, 0.08);
+    }
+    .btn-cancel-order:hover, .btn-cancel-order:focus {
+        background: linear-gradient(90deg, #fbc02d 0%, #6a1b9a 100%);
+        color: #fff;
+        box-shadow: 0 4px 16px rgba(44,41,92,0.12);
+    }
+    .btn-delete-order {
+        background: linear-gradient(90deg, #c62828 0%, #283593 100%);
+        color: #fff;
+        font-weight: 700;
+        border-radius: 10px;
+        border: none;
+        transition: background 0.2s, box-shadow 0.2s;
+        font-size: 1rem;
+        padding: 0.4rem 1.2rem;
+        box-shadow: 0 2px 8px rgba(44, 41, 92, 0.08);
+    }
+    .btn-delete-order:hover, .btn-delete-order:focus {
+        background: linear-gradient(90deg, #283593 0%, #c62828 100%);
+        color: #fff;
+        box-shadow: 0 4px 16px rgba(44,41,92,0.12);
+    }
+    @@media (max-width: 900px) {
+        .orders-card { max-width: 98vw; margin: 16px auto; padding: 1.2rem 0.5rem; }
+        .orders-header { font-size: 1.5rem; }
     }
 </style>
-<div class="container mt-5">
-    <h2>All Orders</h2>
-    @if (!string.IsNullOrEmpty(Model.StatusMessage))
-    {
-        <div id="statusMessage" class="alert alert-success alert-dismissible fade show text-center" role="alert">
-            @Model.StatusMessage
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    }
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Order #</th>
-                <th>Customer</th>
-                <th>Date</th>
-                <th>Total</th>
-                <th>Details</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var order in Model.Orders)
-            {
+<div class="orders-bg">
+    <div class="orders-card">
+        <div class="orders-header">Manage Orders</div>
+        @if (!string.IsNullOrEmpty(Model.StatusMessage))
+        {
+            <div id="statusMessage" class="alert alert-success alert-dismissible fade show text-center" role="alert">
+                @Model.StatusMessage
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        <table class="table table-bordered">
+            <thead>
                 <tr>
-                    <td>@order.Id</td>
-                    <td>@order.FirstName @order.LastName<br />@order.Email</td>
-                    <td>@order.OrderPlaced.ToLocalTime().ToString("g")</td>
-                    <td>@order.OrderTotal.ToString("C")</td>
-                    <td>
-                        <ul>
-                            @foreach (var detail in order.OrderDetails)
-                            {
-                                <li>@detail.Product?.Name x @detail.Quantity (@detail.Price.ToString("C") each)</li>
-                            }
-                        </ul>
-                    </td>
-                    <td>
-                        <form method="post" asp-page-handler="Approve" asp-route-id="@order.Id" style="display:inline;">
-                            <button type="submit" class="btn btn-sm btn-success"
-                                @(order.Status == "Approved" || order.Status == "Cancelled" ? "disabled" : "")>
-                                Approve
-                            </button>
-                        </form>
-                        <form method="post" asp-page-handler="Cancel" asp-route-id="@order.Id" style="display:inline;">
-                            <button type="submit" class="btn btn-sm btn-purple"
-                                @(order.Status == "Cancelled" || order.Status == "Approved" ? "disabled" : "")>
-                                Cancel
-                            </button>
-                        </form>
-                        <form method="post" asp-page-handler="Delete" asp-route-id="@order.Id" style="display:inline;">
-                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                        </form>
-                    </td>
+                    <th>Order #</th>
+                    <th>Customer</th>
+                    <th>Date</th>
+                    <th>Total</th>
+                    <th>Details</th>
+                    <th>Actions</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var order in Model.Orders)
+                {
+                    <tr>
+                        <td>@order.Id</td>
+                        <td>@order.FirstName @order.LastName<br />@order.Email</td>
+                        <td>@order.OrderPlaced.ToLocalTime().ToString("g")</td>
+                        <td>@order.OrderTotal.ToString("C")</td>
+                        <td>
+                            <ul>
+                                @foreach (var detail in order.OrderDetails)
+                                {
+                                    <li>@detail.Product?.Name x @detail.Quantity (@detail.Price.ToString("C") each)</li>
+                                }
+                            </ul>
+                        </td>
+                        <td>
+                            <form method="post" asp-page-handler="Approve" asp-route-id="@order.Id" style="display:inline;">
+                                <button type="submit" class="btn btn-sm btn-approve-order"
+                                    @(order.Status == "Approved" || order.Status == "Cancelled" ? "disabled" : "")>
+                                    Approve
+                                </button>
+                            </form>
+                            <form method="post" asp-page-handler="Cancel" asp-route-id="@order.Id" style="display:inline;">
+                                <button type="submit" class="btn btn-sm btn-cancel-order"
+                                    @(order.Status == "Cancelled" || order.Status == "Approved" ? "disabled" : "")>
+                                    Cancel
+                                </button>
+                            </form>
+                            <form method="post" asp-page-handler="Delete" asp-route-id="@order.Id" style="display:inline;">
+                                <button type="submit" class="btn btn-sm btn-delete-order">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
-
 @section Scripts {
     <script>
         window.addEventListener('DOMContentLoaded', function () {
