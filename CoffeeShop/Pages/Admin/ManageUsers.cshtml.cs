@@ -19,13 +19,15 @@ namespace CoffeeShop.Pages.Admin
         public List<ApplicationUser> Users { get; set; } = new();
 
         [TempData]
-        public string StatusMessage { get; set; }
+        public string? StatusMessage { get; set; } // Made nullable
 
         public async Task OnGetAsync()
         {
-            Users = _userManager.Users
-                .Where(u => u.Email != "admin@coffeeshop.com") // Exclude admin
-                .ToList();
+            Users = await Task.Run(() =>
+                _userManager.Users
+                    .Where(u => u.Email != "admin@coffeeshop.com") // Exclude admin
+                    .ToList()
+            );
         }
 
         public async Task<IActionResult> OnPostDeleteAsync(string id)

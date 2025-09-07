@@ -1,25 +1,28 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-public class ContactMessage
+namespace CoffeeShop.Models
 {
-    public int Id { get; set; }
+    public class ContactMessage
+    {
+        public int Id { get; set; }
 
-    [Required, StringLength(100)]
-    public string Name { get; set; }
+        [Required, StringLength(100)]
+        public required string Name { get; set; } = string.Empty;
 
-    [Required, EmailAddress, StringLength(100)]
-    public string Email { get; set; }
+        [Required, EmailAddress, StringLength(100)]
+        public required string Email { get; set; } = string.Empty;
 
-    [StringLength(20)]
-    public string? Phone { get; set; }
+        [StringLength(20)]
+        public string? Phone { get; set; }
 
-    [Required, StringLength(1000)]
-    public string Message { get; set; }
+        [Required, StringLength(1000)]
+        public required string Message { get; set; } = string.Empty;
 
-    public DateTime SubmittedAt { get; set; } = DateTime.UtcNow;
+        public DateTime SubmittedAt { get; set; } = DateTime.UtcNow;
 
-    public bool IsRead { get; set; } = false;
+        public bool IsRead { get; set; } = false;
 
-    public string? AdminReply { get; set; }
+        public string? AdminReply { get; set; }
+    }
 }

@@ -1,5 +1,6 @@
 ﻿using CoffeeShop.Data;
 using CoffeeShop.Models.Interfaces;
+using CoffeeShop.Models;
 
 namespace CoffeeShop.Models.Services
 {
@@ -22,7 +23,16 @@ namespace CoffeeShop.Models.Services
                 {
                     Quantity = item.Qty,
                     ProductId = item.Product.Id,
-                    Price = item.Product.Price
+                    Price = item.Product.Price,
+                    Product = new Product {
+                        Id = item.Product.Id,
+                        Name = item.Product.Name ?? string.Empty,
+                        Detail = item.Product.Detail ?? string.Empty,
+                        Price = item.Product.Price,
+                        IsTrendingProduct = item.Product.IsTrendingProduct,
+                        ImageUrl = item.Product.ImageUrl
+                    },
+                    Order = order
                 };
                 order.OrderDetails.Add(orderDetail);
             }

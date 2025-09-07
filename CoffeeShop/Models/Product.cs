@@ -5,10 +5,10 @@ public class Product
     public int Id { get; set; }
 
     [Required(ErrorMessage = "Product name is required."), StringLength(100), Display(Name = "Product Name")]
-    public string Name { get; set; }
+    public required string Name { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Product detail is required."), StringLength(1000), Display(Name = "Detail")]
-    public string Detail { get; set; }
+    public required string Detail { get; set; } = string.Empty;
 
     [Range(0.01, 10000, ErrorMessage = "Price must be between 0.01 and 10,000."), Display(Name = "Price")]
     public decimal Price { get; set; }

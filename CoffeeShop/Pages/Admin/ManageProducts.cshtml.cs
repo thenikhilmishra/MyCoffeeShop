@@ -27,7 +27,7 @@ namespace CoffeeShop.Pages.Admin
         public List<Product> Products { get; set; } = new();
 
         [TempData]
-        public string StatusMessage { get; set; }
+        public string? StatusMessage { get; set; }
 
         public async Task OnGetAsync()
         {

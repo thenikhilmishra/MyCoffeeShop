@@ -24,6 +24,7 @@ namespace CoffeeShop.Pages.Admin
         [Required]
         public string Password { get; set; }
         public string ErrorMessage { get; set; }
+        public string? StatusMessage { get; set; } // Made nullable
 
         public void OnGet() { }
 

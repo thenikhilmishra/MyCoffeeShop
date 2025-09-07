@@ -14,6 +14,7 @@ public class AdminProfileModel : PageModel
     }
 
     public ApplicationUser? AdminInfo { get; set; }
+    public string? StatusMessage { get; set; }
 
     public async Task OnGetAsync()
     {

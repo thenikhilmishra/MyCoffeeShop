@@ -21,7 +21,7 @@ namespace CoffeeShop.Pages.Admin
         public InputModel Input { get; set; } = new();
 
         [TempData]
-        public string StatusMessage { get; set; }
+        public string? StatusMessage { get; set; }
 
         public class InputModel
         {

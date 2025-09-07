@@ -21,7 +21,7 @@ namespace CoffeeShop.Pages.Admin
         public List<Order> Orders { get; set; } = new();
 
         [TempData]
-        public string StatusMessage { get; set; }
+        public string? StatusMessage { get; set; }
 
         public async Task OnGetAsync()
         {

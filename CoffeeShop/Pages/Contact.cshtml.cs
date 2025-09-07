@@ -1,4 +1,5 @@
 using CoffeeShop.Data;
+using CoffeeShop.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -13,7 +14,7 @@ namespace CoffeeShop.Pages
         }
 
         [BindProperty]
-        public ContactMessage Contact { get; set; }
+        public ContactMessage Contact { get; set; } = new ContactMessage { Name = string.Empty, Email = string.Empty, Message = string.Empty };
 
         public string? SuccessMessage { get; set; }
 
@@ -33,7 +34,7 @@ namespace CoffeeShop.Pages
 
             // Clear the form fields on the server side
             ModelState.Clear();
-            Contact = new ContactMessage();
+            Contact = new ContactMessage { Name = string.Empty, Email = string.Empty, Message = string.Empty };
 
             return Page();
         }

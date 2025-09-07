@@ -25,5 +25,7 @@ namespace CoffeeShop.Controllers
             }
             return View(product);
         }
+        
+        public string? StatusMessage { get; set; }
     }
 }

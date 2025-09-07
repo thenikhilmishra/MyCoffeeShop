@@ -22,7 +22,7 @@ namespace CoffeeShop.Pages.Admin
         public Product Product { get; set; }
 
         [TempData]
-        public string StatusMessage { get; set; }
+        public string? StatusMessage { get; set; }
 
         [BindProperty]
         public IFormFile? ImageFile { get; set; }

@@ -19,6 +19,7 @@ public class ProfileModel : PageModel
 
     public ApplicationUser? UserInfo { get; set; }
     public List<Order> Orders { get; set; } = new();
+    public string? StatusMessage { get; set; }
 
     public async Task OnGetAsync()
     {

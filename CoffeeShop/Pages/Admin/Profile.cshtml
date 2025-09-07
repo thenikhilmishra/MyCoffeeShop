@@ -1,8 +1,23 @@
 @page
 @model AdminProfileModel
-@{
-    ViewData["Title"] = "Admin Profile";
-}
+<style>
+    body, html {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    .profile-bg {
+        background: url('/images/coffee-beans-2258839-960.jpg') center center no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+        min-height: 100vh;
+        width: 100vw;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    /* ...rest of styles unchanged... */
+</style>
 
 <div class="container mt-4">
     <div class="row justify-content-center">
@@ -10,8 +25,8 @@
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">Admin Info</h4>
-                    <p><strong>Name:</strong> @Model.AdminInfo.UserName</p>
-                    <p><strong>Email:</strong> @Model.AdminInfo.Email</p>
+                    <p><strong>Name:</strong> @Model.AdminInfo?.UserName</p>
+                    <p><strong>Email:</strong> @Model.AdminInfo?.Email</p>
                     <a class="btn btn-primary" asp-page="/Admin/EditProfile">Edit Profile</a>
                     <a class="btn btn-secondary" asp-page="/Admin/ChangePassword">Change Password</a>
                     <a class="btn btn-info" asp-page="/Admin/ManageProducts">Manage Products</a>

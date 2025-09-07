@@ -18,6 +18,7 @@ namespace CoffeeShop.Pages
         }
 
         public List<Order> Orders { get; set; } = new();
+        public string? StatusMessage { get; set; }
 
         public async Task OnGetAsync()
         {
