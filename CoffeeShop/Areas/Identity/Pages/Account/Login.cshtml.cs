@@ -127,11 +127,16 @@ namespace CoffeeShop.Areas.Identity.Pages.Account
                     _logger.LogWarning("User account locked out.");
                     return RedirectToPage("./Lockout");
                 }
+                if (result.IsNotAllowed)
+                {
+                    ModelState.AddModelError(string.Empty, "Please confirm your email before logging in.");
+                }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                    return Page();
+                    ModelState.AddModelError(string.Empty, "If you are not registered, please Sign Up!");
+                    ViewData["ShowSignUpPopup"] = true;
                 }
+                return Page();
             }
             return Page();
         }

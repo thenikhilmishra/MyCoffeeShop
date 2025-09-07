@@ -132,6 +132,13 @@
         <div class="login-header">
             Login
         </div>
+        @if (ViewData["ShowSignUpPopup"] as bool? == true)
+        {
+            <div class="alert alert-danger text-center" id="signupPopup" style="font-size:1.15rem;font-weight:600;">
+                <i class="fa fa-exclamation-circle" style="margin-right:8px;"></i>
+                If you are not registered, please <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" style="color:#b88a4a;text-decoration:underline;font-weight:700;">Sign Up</a>!
+            </div>
+        }
         <form method="post" autocomplete="off">
             <div class="mb-3">
                 <label asp-for="Input.Email" class="form-label">Email</label>
@@ -180,5 +187,16 @@
                 icon.classList.add('fa-eye');
             }
         }
+        // Optional: auto-hide popup after 3 seconds
+        window.addEventListener('DOMContentLoaded', function () {
+            var popup = document.getElementById('signupPopup');
+            if (popup) {
+                setTimeout(function () {
+                    popup.style.transition = "opacity 0.5s";
+                    popup.style.opacity = 0;
+                    setTimeout(function () { popup.style.display = 'none'; }, 500);
+                }, 3000);
+            }
+        });
     </script>
 }

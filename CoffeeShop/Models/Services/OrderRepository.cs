@@ -24,14 +24,7 @@ namespace CoffeeShop.Models.Services
                     Quantity = item.Qty,
                     ProductId = item.Product.Id,
                     Price = item.Product.Price,
-                    Product = new Product {
-                        Id = item.Product.Id,
-                        Name = item.Product.Name ?? string.Empty,
-                        Detail = item.Product.Detail ?? string.Empty,
-                        Price = item.Product.Price,
-                        IsTrendingProduct = item.Product.IsTrendingProduct,
-                        ImageUrl = item.Product.ImageUrl
-                    },
+                    Product = item.Product, // Use the tracked instance
                     Order = order
                 };
                 order.OrderDetails.Add(orderDetail);
