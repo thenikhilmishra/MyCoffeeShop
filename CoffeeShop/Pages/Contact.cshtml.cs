@@ -28,6 +28,7 @@ namespace CoffeeShop.Pages
                 return Page();
 
             Contact.SubmittedAt = DateTime.UtcNow;
+            Contact.Email = Contact.Email?.Trim().ToLowerInvariant(); // Ensure email is stored in lower case
             _context.ContactMessages.Add(Contact);
             await _context.SaveChangesAsync();
             SuccessMessage = "Thank you for contacting us! We will get back to you soon.";

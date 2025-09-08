@@ -19,6 +19,7 @@ public class ProfileModel : PageModel
 
     public ApplicationUser? UserInfo { get; set; }
     public List<Order> Orders { get; set; } = new();
+    public ContactMessage? ContactInfo { get; set; }
     public string? StatusMessage { get; set; }
 
     public async Task OnGetAsync()
@@ -33,10 +34,14 @@ public class ProfileModel : PageModel
                 .ThenInclude(d => d.Product)
                 .OrderByDescending(o => o.OrderPlaced)
                 .ToListAsync();
+
+            ContactInfo = await _context.ContactMessages
+                .FirstOrDefaultAsync(c => c.Email.ToLower() == email);
         }
         else
         {
             Orders = new List<Order>();
+            ContactInfo = null;
         }
     }
 }

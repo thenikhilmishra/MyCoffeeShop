@@ -107,6 +107,32 @@
     .order-status-approved { color: #00796b; font-weight: 700; }
     .order-status-cancelled { color: #c62828; font-weight: 700; }
     .order-status-pending { color: #6a1b9a; font-weight: 700; }
+    .contact-alert-gradient {
+        background: linear-gradient(90deg, #ff9800 0%, #f8ffae 50%, #43c6ac 100%);
+        color: #2d295c;
+        border-radius: 12px;
+        padding: 1.5rem;
+        transition: background 0.5s;
+    }
+    .contact-alert-gradient.active {
+        background: linear-gradient(90deg, #283593 0%, #c62828 100%);
+        color: #fff;
+    }
+    .contact-alert-gradient .btn-contact {
+        background: #b88a4a;
+        color: #fff;
+        font-weight: 700;
+        border-radius: 8px;
+        border: none;
+        padding: 0.7rem 2rem;
+        margin-top: 1rem;
+        box-shadow: 0 2px 8px rgba(44,41,92,0.08);
+        transition: background 0.3s;
+    }
+    .contact-alert-gradient .btn-contact:hover {
+        background: #ff9800;
+        color: #fff;
+    }
     @@media (max-width: 900px) {
         .profile-card { max-width: 98vw; margin: 16px auto; padding: 1.2rem 0.5rem; }
         .profile-header { font-size: 1.5rem; }
@@ -179,10 +205,30 @@
                     }
                     else
                     {
-                        <div class="alert alert-info d-flex flex-column align-items-center">
+                        <div id="orderAlert" class="contact-alert-gradient d-flex flex-column align-items-center">
                             <span>You have not placed any orders yet.</span>
-                            <a href="/Products/Shop" class="btn btn-success mt-3" style="font-weight:600;">
+                            <a href="/Products/Shop" class="btn btn-success mt-3" style="font-weight:600;" onclick="activateOrderAlert()">
                                 Explore best Sips Now!
+                            </a>
+                        </div>
+                    }
+                </div>
+                <div class="order-history-card mt-4">
+                    <h4>Contact Info</h4>
+                    @if (Model.ContactInfo != null)
+                    {
+                        <ul class="list-group">
+                            <li class="list-group-item"><strong>Name:</strong> @Model.ContactInfo.Name</li>
+                            <li class="list-group-item"><strong>Message form @Model.UserInfo?.FirstName @Model.UserInfo?.LastName:</strong> @Model.ContactInfo.Message</li>
+                            <li class="list-group-item"><strong>Coffee Crew Response:</strong> @(string.IsNullOrWhiteSpace(Model.ContactInfo.AdminReply) ? "No reply from Brewed yet." : Model.ContactInfo.AdminReply)</li>
+                        </ul>
+                    }
+                    else
+                    {
+                        <div id="contactAlert" class="contact-alert-gradient d-flex flex-column align-items-center">
+                            <span>Oops, no contact info yet. Want to break the silence?</span>
+                            <a href="/Contact" class="btn btn-contact mt-3" style="font-weight:600;" onclick="activateContactAlert()">
+                                Contact Us
                             </a>
                         </div>
                     }
@@ -191,3 +237,17 @@
         </div>
     </div>
 </div>
+<script>
+    function activateContactAlert() {
+        var alertDiv = document.getElementById('contactAlert');
+        if (alertDiv) {
+            alertDiv.classList.add('active');
+        }
+    }
+    function activateOrderAlert() {
+        var alertDiv = document.getElementById('orderAlert');
+        if (alertDiv) {
+            alertDiv.classList.add('active');
+        }
+    }
+</script>

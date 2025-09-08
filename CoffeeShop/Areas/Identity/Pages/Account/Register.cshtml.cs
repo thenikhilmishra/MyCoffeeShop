@@ -124,6 +124,7 @@ namespace CoffeeShop.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
+                Input.Email = Input.Email?.Trim().ToLowerInvariant();
                 var user = new ApplicationUser {
                     UserName = Input.Email,
                     Email = Input.Email,
