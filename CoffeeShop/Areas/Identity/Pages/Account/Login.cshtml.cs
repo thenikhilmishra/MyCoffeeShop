@@ -133,7 +133,7 @@ namespace CoffeeShop.Areas.Identity.Pages.Account
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "If you are not registered, please Sign Up!");
+                    ModelState.AddModelError(string.Empty, "Sign Up!");
                     ViewData["ShowSignUpPopup"] = true;
                 }
                 return Page();

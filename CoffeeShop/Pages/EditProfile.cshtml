@@ -1,0 +1,67 @@
+@page
+@model EditProfileModel
+@{
+    ViewData["Title"] = "Edit Profile";
+}
+<style>
+    body, html { height: 100%; margin: 0; padding: 0; }
+    .login-bg { background: url('/images/coffee-beans-2258839-960.jpg') center center no-repeat; background-attachment: fixed; background-size: cover; min-height: 100vh; width: 100vw; display: flex; align-items: center; justify-content: center; }
+    .login-card { max-width: 400px; width: 100%; border-radius: 28px; box-shadow: 0 12px 40px rgba(44, 41, 92, 0.22); background: rgba(255,255,255,0.40); backdrop-filter: blur(24px); padding: 2.8rem 2.2rem 2.2rem 2.2rem; margin: 32px 0; border: 1.5px solid rgba(210,168,106,0.18); transition: box-shadow 0.2s; }
+    .login-header { color: #0a4d4d; font-size: 2rem; font-weight: 800; letter-spacing: 1px; text-align: center; margin-bottom: 2rem; text-shadow: 0 2px 8px rgba(44,41,92,0.08); }
+    .form-label { font-weight: 600; color: #2d295c; }
+    .btn-primary { background: linear-gradient(90deg, #00796b 0%, #ff9800 100%); color: #fff; font-weight: 700; border-radius: 10px; border: none; font-size: 1.1rem; padding: 0.7rem 2.2rem; box-shadow: 0 2px 8px rgba(44, 41, 92, 0.08); }
+    .btn-primary:hover, .btn-primary:focus { background: linear-gradient(90deg, #ff9800 0%, #00796b 100%); color: #fff; box-shadow: 0 4px 16px rgba(44,41,92,0.12); }
+    .popup {
+        display: block;
+        position: relative;
+        margin-bottom: 1rem;
+        animation: fadeIn 0.5s;
+    }
+    @@keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+</style>
+<div class="login-bg">
+    <div class="login-card">
+        <div class="login-header">Edit Profile</div>
+        @if (Model.ShowPopup && !string.IsNullOrEmpty(Model.StatusMessage)) {
+            <div id="popupMessage" class="alert alert-info popup">@Model.StatusMessage</div>
+            <script>
+                setTimeout(function() {
+                    var popup = document.getElementById('popupMessage');
+                    if (popup) popup.style.display = 'none';
+                    window.location.href = '/Profile';
+                }, 3000);
+            </script>
+        }
+        <form method="post">
+            <div class="mb-3">
+                <label asp-for="Input.FirstName" class="form-label"></label>
+                <input asp-for="Input.FirstName" class="form-control" />
+                <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Input.LastName" class="form-label"></label>
+                <input asp-for="Input.LastName" class="form-control" />
+                <span asp-validation-for="Input.LastName" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Input.Email" class="form-label"></label>
+                <input asp-for="Input.Email" class="form-control" />
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Input.PhoneNumber" class="form-label"></label>
+                <input asp-for="Input.PhoneNumber" class="form-control" />
+                <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Input.Address" class="form-label"></label>
+                <input asp-for="Input.Address" class="form-control" />
+                <span asp-validation-for="Input.Address" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Save Changes</button>
+        </form>
+    </div>
+</div>

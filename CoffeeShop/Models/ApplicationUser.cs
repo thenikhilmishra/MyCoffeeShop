@@ -7,5 +7,6 @@ namespace CoffeeShop.Models
         public required string FirstName { get; set; } = string.Empty;
         public required string LastName { get; set; } = string.Empty;
         public required string Address { get; set; } = string.Empty;
+        public DateTime LastLoginUtc { get; internal set; }
     }
 }

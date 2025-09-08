@@ -1,10 +1,11 @@
 @page
 @model AdminProfileModel
+@{
+    ViewData["Title"] = "Admin Profile";
+}
 <style>
     body, html {
-        height: 100%;
-        margin: 0;
-        padding: 0;
+        height: 100%; margin: 0; padding: 0;
     }
     .profile-bg {
         background: url('/images/coffee-beans-2258839-960.jpg') center center no-repeat;
@@ -16,22 +17,102 @@
         align-items: center;
         justify-content: center;
     }
-    /* ...rest of styles unchanged... */
+    .profile-card {
+        max-width: 500px;
+        margin: 48px auto;
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(44, 41, 92, 0.12);
+        overflow: hidden;
+        background: rgba(255,255,255,0.85);
+    }
+    .profile-header {
+        background: linear-gradient(90deg, #00796b 0%, #ff9800 100%);
+        color: #fff;
+        padding: 1.5rem 2rem;
+        font-size: 2rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-align: center;
+        border-top-left-radius: 18px;
+        border-top-right-radius: 18px;
+    }
+    .profile-body {
+        padding: 2rem;
+    }
+    .profile-info {
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+    .profile-avatar {
+        border-radius: 50%;
+        width: 64px;
+        height: 64px;
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 12px rgba(44,41,92,0.12);
+    }
+    .profile-info h4 {
+        margin: 0;
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #2d295c;
+    }
+    .profile-info .email {
+        color: #888;
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+    }
+    .profile-details {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 1.2rem 1rem;
+        margin-top: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    .profile-details dt {
+        font-weight: 700;
+        color: #b88a4a;
+        font-size: 1.05rem;
+    }
+    .profile-details dd {
+        margin-bottom: 0.7rem;
+        color: #2d295c;
+        font-size: 1rem;
+    }
+    .profile-stats {
+        font-size: 1rem;
+        color: #2d295c;
+        margin-top: 1.5rem;
+    }
+    .profile-stats strong {
+        color: #b88a4a;
+    }
+    @@media (max-width: 600px) {
+        .profile-card { max-width: 98vw; margin: 16px auto; }
+        .profile-body { padding: 1rem; }
+        .profile-header { font-size: 1.3rem; padding: 1rem; }
+    }
 </style>
-
-<div class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title">Admin Info</h4>
-                    <p><strong>Name:</strong> @Model.AdminInfo?.UserName</p>
-                    <p><strong>Email:</strong> @Model.AdminInfo?.Email</p>
-                    <a class="btn btn-primary" asp-page="/Admin/EditProfile">Edit Profile</a>
-                    <a class="btn btn-secondary" asp-page="/Admin/ChangePassword">Change Password</a>
-                    <a class="btn btn-info" asp-page="/Admin/ManageProducts">Manage Products</a>
-                    <a class="btn btn-info" asp-page="/Admin/Orders">Manage Orders</a>
-                </div>
+<div class="profile-bg">
+    <div class="profile-card">
+        <div class="profile-header">Admin Profile</div>
+        <div class="profile-body">
+            <div class="profile-info">
+                <img src="https://ui-avatars.com/api/?name=@(Model.AdminInfo?.FirstName ?? "Admin")&background=ff9800&color=fff&size=64" alt="Admin Avatar" class="profile-avatar" />
+                <h4>@Model.AdminInfo?.FirstName @Model.AdminInfo?.LastName</h4>
+                <div class="email">@Model.AdminInfo?.Email</div>
+            </div>
+            <dl class="profile-details">
+                <dt>Role</dt>
+                <dd>Administrator</dd>
+                <dt>Address</dt>
+                <dd>@Model.AdminInfo?.Address</dd>
+            </dl>
+            <div class="profile-stats">
+                <strong>Total Users:</strong> @Model.TotalUsers<br />
+                <strong>New Registrations (24h):</strong> @Model.NewRegistrations24h<br />
+                <strong>User Activity (Last 24h):</strong> @Model.UsersLoggedIn24h<br />
+                <strong>New Contact Messages (24h):</strong> @Model.NewContactMessages24h<br />
+                <strong>New Orders (24h):</strong> @Model.NewOrders24h<br />
             </div>
         </div>
     </div>
