@@ -19,7 +19,7 @@ public class ProfileModel : PageModel
 
     public ApplicationUser? UserInfo { get; set; }
     public List<Order> Orders { get; set; } = new();
-    public ContactMessage? ContactInfo { get; set; }
+    public List<ContactMessage> ContactMessages { get; set; } = new();
     public string? StatusMessage { get; set; }
 
     public async Task OnGetAsync()
@@ -27,21 +27,23 @@ public class ProfileModel : PageModel
         UserInfo = await _userManager.GetUserAsync(User);
         if (UserInfo != null)
         {
-            var email = UserInfo.Email?.ToLowerInvariant();
+            var email = UserInfo.Email?.Trim().ToLowerInvariant();
             Orders = await _context.Orders
-                .Where(o => o.Email == email)
+                .Where(o => EF.Functions.Like(o.Email, email))
                 .Include(o => o.OrderDetails)
                 .ThenInclude(d => d.Product)
                 .OrderByDescending(o => o.OrderPlaced)
                 .ToListAsync();
 
-            ContactInfo = await _context.ContactMessages
-                .FirstOrDefaultAsync(c => c.Email.ToLower() == email);
+            ContactMessages = await _context.ContactMessages
+                .Where(c => EF.Functions.Like(c.Email, email))
+                .OrderByDescending(c => c.SubmittedAt)
+                .ToListAsync();
         }
         else
         {
             Orders = new List<Order>();
-            ContactInfo = null;
+            ContactMessages = new List<ContactMessage>();
         }
     }
 }

@@ -215,13 +215,29 @@
                 </div>
                 <div class="order-history-card mt-4">
                     <h4>Contact Info</h4>
-                    @if (Model.ContactInfo != null)
+                    @if (Model.ContactMessages != null && Model.ContactMessages.Any())
                     {
-                        <ul class="list-group">
-                            <li class="list-group-item"><strong>Name:</strong> @Model.ContactInfo.Name</li>
-                            <li class="list-group-item"><strong>Message form @Model.UserInfo?.FirstName @Model.UserInfo?.LastName:</strong> @Model.ContactInfo.Message</li>
-                            <li class="list-group-item"><strong>Coffee Crew Response:</strong> @(string.IsNullOrWhiteSpace(Model.ContactInfo.AdminReply) ? "No reply from Brewed yet." : Model.ContactInfo.AdminReply)</li>
-                        </ul>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Name</th>
+                                    <th>Message</th>
+                                    <th>Coffee Crew Response</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var msg in Model.ContactMessages)
+                                {
+                                    <tr>
+                                        <td>@msg.SubmittedAt.ToLocalTime().ToString("g")</td>
+                                        <td>@msg.Name</td>
+                                        <td>@msg.Message</td>
+                                        <td>@(string.IsNullOrWhiteSpace(msg.AdminReply) ? "No reply from Brewed yet." : msg.AdminReply)</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
                     }
                     else
                     {

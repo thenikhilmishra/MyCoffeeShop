@@ -43,10 +43,11 @@ namespace CoffeeShop.Controllers
             // Use Identity GUID for UserId
             var userId = _userManager.GetUserId(User);
             order.UserId = userId;
-            // Always store email in lowercase
-            if (!string.IsNullOrEmpty(order.Email))
+            // Always set order email to logged-in user's email
+            var user = _userManager.GetUserAsync(User).Result;
+            if (user != null)
             {
-                order.Email = order.Email.ToLowerInvariant();
+                order.Email = user.Email.ToLowerInvariant();
             }
             orderRepository.PlaceOrder(order);
             shopCartRepository.ClearCart();
