@@ -110,8 +110,11 @@
             </div>
             <div class="mb-3">
                 <label asp-for="ImageFile" class="form-label">Product Image</label>
-                <input asp-for="ImageFile" type="file" class="form-control" accept="image/*" />
+                <input asp-for="ImageFile" type="file" class="form-control" accept="image/*" onchange="previewProductImage(event)" />
                 <span asp-validation-for="ImageFile" class="text-danger"></span>
+                <div class="mt-2">
+                    <img id="imagePreview" src="#" alt="Image Preview" style="max-width:180px; max-height:180px; display:none; border-radius:12px; box-shadow:0 2px 8px rgba(44,41,92,0.10);" />
+                </div>
             </div>
             <div class="form-check mb-3">
                 <input asp-for="Product.IsTrendingProduct" class="form-check-input" />
@@ -174,5 +177,20 @@
                 }
             }, 2500);
         });
+        function previewProductImage(event) {
+            var input = event.target;
+            var preview = document.getElementById('imagePreview');
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                preview.src = '#';
+                preview.style.display = 'none';
+            }
+        }
     </script>
 }
