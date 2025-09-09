@@ -6,7 +6,9 @@
         <div class="item features-image сol-12 col-md-6 col-lg-4">
             <div class="item-wrapper">
                 <div class="item-img">
-                    <img src="@item.ImageUrl" alt="Coffee Shop" title="">
+                    <a asp-controller="Products" asp-action="Detail" asp-route-id="@item.Id">
+                        <img src="@item.ImageUrl" alt="Coffee Shop" title="" style="cursor:pointer;" />
+                    </a>
                 </div>
                 <div class="item-content">
                     <a asp-controller="Products" asp-action="Detail" asp-route-id="@item.Id">
