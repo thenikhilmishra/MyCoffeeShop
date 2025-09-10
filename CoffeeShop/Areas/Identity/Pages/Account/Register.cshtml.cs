@@ -109,6 +109,14 @@ namespace CoffeeShop.Areas.Identity.Pages.Account
 
             [Required]
             public string Address { get; set; }
+
+            [Required]
+            [Display(Name = "Gender")]
+            public string Gender { get; set; }
+
+            [Required]
+            [Display(Name = "Country")]
+            public string Country { get; set; }
         }
 
 
@@ -125,13 +133,17 @@ namespace CoffeeShop.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 Input.Email = Input.Email?.Trim().ToLowerInvariant();
+                Input.Gender = Input.Gender?.Trim();
+                Input.Country = Input.Country?.Trim();
                 var user = new ApplicationUser {
                     UserName = Input.Email,
                     Email = Input.Email,
                     FirstName = Input.FirstName,
                     LastName = Input.LastName,
                     PhoneNumber = Input.PhoneNumber,
-                    Address = Input.Address
+                    Address = Input.Address,
+                    Gender = Input.Gender,
+                    Country = Input.Country
                 };
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);

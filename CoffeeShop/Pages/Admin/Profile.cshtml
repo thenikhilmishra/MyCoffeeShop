@@ -1,130 +1,345 @@
 @page
 @model AdminProfileModel
 @{
-    ViewData["Title"] = "Admin Profile";
+    ViewData["Title"] = "Admin Dashboard";
 }
+<!-- Chart.js loader -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-    body, html {
-        height: 100%; margin: 0; padding: 0;
-    }
-    .profile-bg {
-        background: url('/images/coffee-beans-2258839-960.jpg') center center no-repeat;
-        background-attachment: fixed;
-        background-size: cover;
+    body, html { height: 100%; margin: 0; padding: 0; }
+    .dashboard-bg {
+        background: linear-gradient(120deg, #23235b 0%, #3a1c71 100%);
         min-height: 100vh;
         width: 100vw;
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         justify-content: center;
+        padding: 32px 0;
     }
-    .profile-card {
-        max-width: 500px;
-        margin: 48px auto;
-        border-radius: 18px;
-        box-shadow: 0 8px 32px rgba(44, 41, 92, 0.12);
-        overflow: hidden;
-        background: rgba(255,255,255,0.85);
+    .dashboard-container {
+        max-width: 1400px;
+        width: 98vw;
+        background: rgba(30,30,60,0.85);
+        border-radius: 32px;
+        box-shadow: 0 12px 40px rgba(44,41,92,0.32);
+        padding: 2.5rem 2rem;
+        margin: 0 auto;
     }
-    .profile-header {
-        background: linear-gradient(90deg, #00796b 0%, #ff9800 100%);
+    .dashboard-header {
+        font-size: 2.7rem;
+        font-weight: 900;
+        background: linear-gradient(90deg, #ff9800 0%, #43c6ac 50%, #283593 100%);
         color: #fff;
-        padding: 1.5rem 2rem;
-        font-size: 2rem;
-        font-weight: 700;
-        letter-spacing: 1px;
+        padding: 1.2rem 0;
+        border-radius: 18px;
         text-align: center;
-        border-top-left-radius: 18px;
-        border-top-right-radius: 18px;
+        box-shadow: 0 4px 16px rgba(44,41,92,0.22);
+        margin-bottom: 2.2rem;
+        letter-spacing: 2px;
+        text-shadow: 0 2px 8px rgba(44,41,92,0.18);
     }
-    .profile-body {
-        padding: 2rem;
-    }
-    .profile-info {
+    .dashboard-row {
         display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 1rem;
-        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+        gap: 2rem;
+        margin-bottom: 2.5rem;
+    }
+    .dashboard-tile {
+        flex: 1 1 320px;
+        background: rgba(255,255,255,0.10);
+        border-radius: 24px;
+        box-shadow: 0 4px 24px rgba(44,41,92,0.28);
+        padding: 2rem 1.2rem 2.5rem 1.2rem;
+        margin-bottom: 0.5rem;
+        min-width: 320px;
+        position: relative;
+        backdrop-filter: blur(16px);
+        border: 2px solid rgba(44,41,92,0.18);
+        overflow: hidden;
+    }
+    .dashboard-tile[data-color="users"] { background: linear-gradient(120deg, #43c6ac 0%, #ff9800 100%); }
+    .dashboard-tile[data-color="products"] { background: linear-gradient(120deg, #7b2ff2 0%, #43c6ac 100%); }
+    .dashboard-tile[data-color="orders"] { background: linear-gradient(120deg, #f357a8 0%, #ff9800 100%); }
+    .dashboard-tile[data-color="contacts"] { background: linear-gradient(120deg, #283593 0%, #43c6ac 100%); }
+    .dashboard-tile[data-color="revenue"] { background: linear-gradient(120deg, #ff9800 0%, #7b2ff2 100%); }
+    .dashboard-tile[data-color="status"] { background: linear-gradient(120deg, #43c6ac 0%, #f357a8 100%); }
+    .dashboard-tile[data-color="trending"] { background: linear-gradient(120deg, #f357a8 0%, #283593 100%); }
+    .dashboard-header-tile {
+        background: linear-gradient(90deg, #ff9800 0%, #43c6ac 50%, #283593 100%);
+        color: #fff;
+        padding: 0.7rem 0;
+        border-radius: 12px;
+        text-align: center;
+        font-size: 1.4rem;
+        font-weight: 900;
+        margin-bottom: 1.2rem;
+        letter-spacing: 1px;
+        text-shadow: 0 2px 8px rgba(44,41,92,0.18);
+    }
+    .dashboard-tile h3 {
+        font-size: 1.3rem;
+        font-weight: 800;
+        color: #fff;
+        margin-bottom: 1.2rem;
+        letter-spacing: 1px;
+        text-shadow: 0 2px 8px rgba(44,41,92,0.18);
         text-align: left;
     }
-    .profile-info-details {
+    .dashboard-tile .plotly-chart {
+        width: 100%;
+        min-height: 220px;
+        margin-bottom: 1rem;
+        border-radius: 12px;
+        background: rgba(255,255,255,0.10);
+    }
+    .dashboard-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 0.5rem;
+        table-layout: fixed;
+    }
+    .dashboard-table th, .dashboard-table td {
+        padding: 0.5rem 0.5rem;
+        border-bottom: 1px solid #eee;
+        font-size: 0.98rem;
+        word-break: break-word;
+        text-align: left;
+    }
+    .dashboard-table th {
+        background: linear-gradient(90deg, #ff9800 0%, #43c6ac 100%);
+        color: #fff;
+        font-weight: 700;
+        border-radius: 8px 8px 0 0;
+        font-size: 1rem;
+        text-align: left;
+    }
+    .dashboard-table tr:last-child td { border-bottom: none; }
+    .status-approved { color: #43c6ac; font-weight: 700; }
+    .status-cancelled { color: #c62828; font-weight: 700; }
+    .status-pending { color: #6a1b9a; font-weight: 700; }
+    .response-none { color: #ff9800; font-weight: 700; }
+    .response-replied { color: #283593; font-weight: 700; }
+    .trending-list {
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        gap: 1.2rem;
+        margin-top: 1rem;
     }
-    .profile-avatar {
-        border-radius: 50%;
-        width: 64px;
-        height: 64px;
-        margin-bottom: 0;
-        box-shadow: 0 2px 12px rgba(44,41,92,0.12);
-    }
-    .profile-info h4 {
-        margin: 0;
+    .trending-item {
+        background: linear-gradient(90deg, #ff9800 0%, #43c6ac 100%);
+        color: #fff;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(44,41,92,0.10);
+        padding: 1rem 1.2rem;
+        min-width: 180px;
+        font-weight: 700;
         font-size: 1.1rem;
-        font-weight: 700;
-        color: #2d295c;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 1rem;
     }
-    .profile-info .email {
-        color: #888;
-        font-size: 0.95rem;
-        margin-bottom: 0;
+    .trending-item .product-img {
+        width: 48px;
+        height: 48px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-right: 0.8rem;
+        background: #fff;
+        box-shadow: 0 2px 8px rgba(44,41,92,0.10);
     }
-    .profile-details {
-        background: #f8f9fa;
-        border-radius: 10px;
-        padding: 1.2rem 1rem;
-        margin-top: 1.5rem;
-        margin-bottom: 1.5rem;
+    .trending-item .product-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
     }
-    .profile-details dt {
-        font-weight: 700;
-        color: #b88a4a;
-        font-size: 1.05rem;
-    }
-    .profile-details dd {
-        margin-bottom: 0.7rem;
-        color: #2d295c;
-        font-size: 1rem;
-    }
-    .profile-stats {
-        font-size: 1rem;
-        color: #2d295c;
-        margin-top: 1.5rem;
-    }
-    .profile-stats strong {
-        color: #b88a4a;
-    }
-    @@media (max-width: 600px) {
-        .profile-card { max-width: 98vw; margin: 16px auto; }
-        .profile-body { padding: 1rem; }
-        .profile-header { font-size: 1.3rem; padding: 1rem; }
+    .trending-item .product-name { font-size: 1.2rem; font-weight: 900; }
+    .trending-item .product-price { font-size: 1.1rem; font-weight: 700; color: #fff; }
+    @@media (max-width: 900px) {
+        .dashboard-container { padding: 1rem 0.2rem; }
+        .dashboard-row { flex-direction: column; gap: 1rem; }
     }
 </style>
-<div class="profile-bg">
-    <div class="profile-card">
-        <div class="profile-header">Admin Profile</div>
-        <div class="profile-body">
-            <div class="profile-info">
-                <img src="https://ui-avatars.com/api/?name=Admin&background=ff9800&color=fff&size=64" alt="Admin Avatar" class="profile-avatar" />
-                <div class="profile-info-details">
-                    <h4>Admin User</h4>
-                    <div class="email">admin@coffeeshop.com</div>
-                </div>
+<div class="dashboard-bg">
+    <div class="dashboard-container">
+        <div class="dashboard-header">Admin Dashboard</div>
+        <div class="dashboard-row">
+            <div class="dashboard-tile" data-color="users">
+                <div class="dashboard-header-tile">Users Overview</div>
+                <canvas id="usersPieChart" width="320" height="180"></canvas>
+                <div><strong>Total Users:</strong> @Model.TotalUsers</div>
+                <div><strong>Total Registrations:</strong> @Model.TotalRegistrations</div>
+                <div><strong>Male:</strong> @Model.MaleUsers</div>
+                <div><strong>Female:</strong> @Model.FemaleUsers</div>
+                <div><strong>Other:</strong> @Model.OtherUsers</div>
+                <div><strong>Countries:</strong> @Model.CountryCount</div>
             </div>
-            <dl class="profile-details">
-                <dt>Role</dt>
-                <dd>Administrator</dd>
-                <dt>Address</dt>
-                <dd>@Model.AdminInfo?.Address</dd>
-            </dl>
-            <div class="profile-stats">
-                <strong>Total Users:</strong> @Model.TotalUsers<br />
-                <strong>New Registrations (24h):</strong> @Model.NewRegistrations24h<br />
-                <strong>User Activity (Last 24h):</strong> @Model.UsersLoggedIn24h<br />
-                <strong>New Contact Messages (24h):</strong> @Model.NewContactMessages24h<br />
-                <strong>New Orders (24h):</strong> @Model.NewOrders24h<br />
+            <div class="dashboard-tile" data-color="products">
+                <div class="dashboard-header-tile">Products Overview</div>
+                <canvas id="productsPieChart" width="320" height="180"></canvas>
+                <div><strong>Total Products:</strong> @Model.TotalProducts</div>
+                <div><strong>Trending Products:</strong> @Model.TrendingProducts</div>
+            </div>
+            <div class="dashboard-tile" data-color="orders">
+                <div class="dashboard-header-tile">Orders Status</div>
+                <canvas id="ordersPieChart" width="320" height="180"></canvas>
+                <div><strong>Total Orders:</strong> @Model.TotalOrders</div>
+                <div><strong>New Orders (24h):</strong> @Model.NewOrders24h</div>
+            </div>
+            <div class="dashboard-tile" data-color="revenue">
+                <div class="dashboard-header-tile">Revenue</div>
+                <canvas id="revenueBarChart" width="320" height="180"></canvas>
+                <div><strong>Total Revenue:</strong> @Model.TotalRevenue.ToString("C")</div>
+                <div><strong>Revenue (24h):</strong> @Model.Revenue24h.ToString("C")</div>
+            </div>
+            <div class="dashboard-tile" data-color="contacts">
+                <div class="dashboard-header-tile">Contact Messages</div>
+                <canvas id="contactsPieChart" width="320" height="180"></canvas>
+                <div><strong>Total Messages:</strong> @Model.TotalContactMessages</div>
+                <div><strong>Unread:</strong> @Model.UnreadContactMessages</div>
+                <div><strong>Replied:</strong> @Model.RepliedContactMessages</div>
+            </div>
+        </div>
+        <div class="dashboard-row">
+            <div class="dashboard-tile" data-color="status">
+                <div class="dashboard-header-tile">Recent Orders</div>
+                <table class="dashboard-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 22%">Date</th>
+                            <th style="width: 22%">User</th>
+                            <th style="width: 18%">Total</th>
+                            <th style="width: 18%">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var order in Model.RecentOrders)
+                    {
+                        <tr>
+                            <td>@order.OrderPlaced.ToLocalTime().ToString("g")</td>
+                            <td>@order.FirstName @order.LastName</td>
+                            <td>@order.OrderTotal.ToString("C")</td>
+                            <td>
+                                @if (order.Status == "Approved") {
+                                    <span class="status-approved">Approved</span>
+                                } else if (order.Status == "Cancelled") {
+                                    <span class="status-cancelled">Cancelled</span>
+                                } else {
+                                    <span class="status-pending">Pending</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+            <div class="dashboard-tile" data-color="contacts">
+                <div class="dashboard-header-tile">Recent Contact Messages</div>
+                <table class="dashboard-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 28%">Date</th>
+                            <th style="width: 22%">Name</th>
+                            <th style="width: 30%">Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var msg in Model.RecentContacts)
+                    {
+                        <tr>
+                            <td>@msg.SubmittedAt.ToLocalTime().ToString("g")</td>
+                            <td>@msg.Name</td>
+                            <td>@msg.Email</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+            <div class="dashboard-tile" data-color="trending">
+                <div class="dashboard-header-tile">Trending Products</div>
+                <div class="trending-list">
+                    @foreach (var prod in Model.TrendingProductList)
+                    {
+                        <div class="trending-item">
+                            @if (!string.IsNullOrEmpty(prod.ImageUrl)) {
+                                <img src="@prod.ImageUrl" alt="@prod.Name" class="product-img" />
+                            }
+                            <div class="product-info">
+                                <span class="product-name">@prod.Name</span>
+                                <span class="product-price">@prod.Price.ToString("C")</span>
+                            </div>
+                        </div>
+                    }
+                </div>
             </div>
         </div>
     </div>
 </div>
+@section Scripts {
+    <script>
+        // Users Pie Chart
+        new Chart(document.getElementById('usersPieChart'), {
+            type: 'pie',
+            data: {
+                labels: ['Registrations', 'Male', 'Female', 'Other', 'Other Users'],
+                datasets: [{
+                    data: [@Model.TotalRegistrations, @Model.MaleUsers, @Model.FemaleUsers, @Model.OtherUsers, @Model.TotalUsers - @Model.TotalRegistrations],
+                    backgroundColor: ['#43c6ac', '#2196f3', '#e91e63', '#ff9800', '#7b2ff2'],
+                }]
+            },
+            options: { plugins: { legend: { labels: { color: '#fff' } } } }
+        });
+        // Products Pie Chart
+        new Chart(document.getElementById('productsPieChart'), {
+            type: 'pie',
+            data: {
+                labels: ['Trending', 'Other'],
+                datasets: [{
+                    data: [@Model.TrendingProducts, @Model.TotalProducts - @Model.TrendingProducts],
+                    backgroundColor: ['#7b2ff2', '#43c6ac'],
+                }]
+            },
+            options: { plugins: { legend: { labels: { color: '#fff' } } } }
+        });
+        // Orders Pie Chart
+        new Chart(document.getElementById('ordersPieChart'), {
+            type: 'pie',
+            data: {
+                labels: ['Approved', 'Cancelled', 'Pending'],
+                datasets: [{
+                    data: [@Model.ApprovedOrders, @Model.CancelledOrders, @Model.PendingOrders],
+                    backgroundColor: ['#43c6ac', '#c62828', '#6a1b9a'],
+                }]
+            },
+            options: { plugins: { legend: { labels: { color: '#fff' } } } }
+        });
+        // Revenue Bar Chart
+        new Chart(document.getElementById('revenueBarChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Total', '24h'],
+                datasets: [{
+                    label: 'Revenue',
+                    data: [@Model.TotalRevenue, @Model.Revenue24h],
+                    backgroundColor: ['#ff9800', '#43c6ac'],
+                }]
+            },
+            options: {
+                plugins: { legend: { display: false } },
+                scales: { x: { ticks: { color: '#fff' } }, y: { ticks: { color: '#fff' } } }
+            }
+        });
+        // Contacts Pie Chart
+        new Chart(document.getElementById('contactsPieChart'), {
+            type: 'pie',
+            data: {
+                labels: ['Unread', 'Replied', 'Other'],
+                datasets: [{
+                    data: [@Model.UnreadContactMessages, @Model.RepliedContactMessages, @Model.TotalContactMessages - @Model.UnreadContactMessages - @Model.RepliedContactMessages],
+                    backgroundColor: ['#ff9800', '#283593', '#43c6ac'],
+                }]
+            },
+            options: { plugins: { legend: { labels: { color: '#fff' } } } }
+        });
+    </script>
+}}
