@@ -19,7 +19,7 @@ namespace CoffeeShop.Pages.Admin
         }
 
         [BindProperty]
-        public Product Product { get; set; }
+        public Product Product { get; set; } = new Product { Name = string.Empty, Detail = string.Empty };
 
         [BindProperty]
         public IFormFile? ImageFile { get; set; }

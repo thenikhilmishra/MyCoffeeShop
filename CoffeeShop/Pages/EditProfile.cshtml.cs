@@ -47,11 +47,11 @@ public class EditProfileModel : PageModel
         if (user == null) return NotFound();
         Input = new InputModel
         {
-            FirstName = user.FirstName,
-            LastName = user.LastName,
-            Email = user.Email,
-            PhoneNumber = user.PhoneNumber,
-            Address = user.Address
+            FirstName = user.FirstName ?? string.Empty,
+            LastName = user.LastName ?? string.Empty,
+            Email = user.Email ?? string.Empty,
+            PhoneNumber = user.PhoneNumber ?? string.Empty,
+            Address = user.Address ?? string.Empty
         };
         return Page();
     }
@@ -61,12 +61,13 @@ public class EditProfileModel : PageModel
         if (!ModelState.IsValid) return Page();
         var user = await _userManager.GetUserAsync(User);
         if (user == null) return NotFound();
+
         user.FirstName = Input.FirstName;
         user.LastName = Input.LastName;
         user.Email = Input.Email;
         user.UserName = Input.Email;
         user.PhoneNumber = Input.PhoneNumber;
-        user.Address = Input.Address;
+        user.Address = Input.Address ?? string.Empty;
         var result = await _userManager.UpdateAsync(user);
         StatusMessage = result.Succeeded ? "Profile updated successfully." : "Error updating profile.";
         ShowPopup = result.Succeeded;

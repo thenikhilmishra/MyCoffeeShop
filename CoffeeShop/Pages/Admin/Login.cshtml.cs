@@ -19,11 +19,11 @@ namespace CoffeeShop.Pages.Admin
 
         [BindProperty]
         [Required]
-        public string Email { get; set; }
+        public string Email { get; set; } = string.Empty;
         [BindProperty]
         [Required]
-        public string Password { get; set; }
-        public string ErrorMessage { get; set; }
+        public string Password { get; set; } = string.Empty;
+        public string ErrorMessage { get; set; } = string.Empty;
         public string? StatusMessage { get; set; } // Made nullable
 
         public void OnGet() { }

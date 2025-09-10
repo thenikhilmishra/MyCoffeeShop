@@ -45,7 +45,7 @@ namespace CoffeeShop.Controllers
             order.UserId = userId;
             // Always set order email to logged-in user's email
             var user = _userManager.GetUserAsync(User).Result;
-            if (user != null)
+            if (user?.Email != null)
             {
                 order.Email = user.Email.ToLowerInvariant();
             }
