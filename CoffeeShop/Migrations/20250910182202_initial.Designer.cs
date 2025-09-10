@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoffeeShop.Migrations
 {
     [DbContext(typeof(CoffeeShopDbContext))]
-    [Migration("20250910123819_RegistrationUpdate")]
-    partial class RegistrationUpdate
+    [Migration("20250910182202_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
