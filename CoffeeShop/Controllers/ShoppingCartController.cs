@@ -20,7 +20,8 @@ namespace CoffeeShop.Controllers
             return View(items);
         }
 
-        public RedirectToActionResult AddToShoppingCart(int pId)
+        [HttpPost]
+        public IActionResult AddToShoppingCart(int pId)
         {
             var product = productRepository.GetAllProducts().FirstOrDefault(p => p.Id == pId);
             if (product != null)
@@ -28,6 +29,14 @@ namespace CoffeeShop.Controllers
                 shoppingCartRepository.AddToCart(product);
                 int cartCount = shoppingCartRepository.GetShoppingCartItems().Count;
                 HttpContext.Session.SetInt32("CartCount", cartCount);
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return Json(new { success = true, cartCount });
+                }
+            }
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                return Json(new { success = false });
             }
             return RedirectToAction("Index");
         }

@@ -21,12 +21,34 @@
                     </p>
                 </div>
                 <div class="mbr-section-btn item-footer mt-2">
-                    <a asp-controller="ShoppingCart" asp-action="AddToShoppingCart" asp-route-pId="@item.Id" class="btn item-btn btn-primary display-4" target="_self">
+                    <button type="button" class="btn item-btn btn-primary display-4" onclick="addToCart(@item.Id)">
                         <span class="mbrib-cart-add mbr-iconfont mbr-iconfont-btn"></span>
                         Add to cart
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>
     }
 </div>
+
+@section Scripts {
+    <script>
+        function addToCart(productId) {
+            fetch('/ShoppingCart/AddToShoppingCart?pId=' + productId, {
+                method: 'POST',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    if (document.getElementById('cartCount')) {
+                        document.getElementById('cartCount').textContent = data.cartCount;
+                    }
+                    alert('Added to cart!');
+                } else {
+                    alert('Could not add to cart.');
+                }
+            });
+        }
+    </script>
+}
