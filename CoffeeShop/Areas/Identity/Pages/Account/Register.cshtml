@@ -129,32 +129,38 @@
             Sign Up
         </div>
         <div class="register-body">
+            @if (TempData["RegisterMessage"] != null)
+            {
+                <div class="alert alert-info" role="alert" id="register-success-popup" style="font-size:1.2rem;text-align:center;">
+                    @TempData["RegisterMessage"]
+                </div>
+            }
             <form method="post" autocomplete="off">
                 <div class="row g-3">
                     <div class="col-md-6">
-                        <label asp-for="Input.FirstName" class="form-label">First Name</label>
-                        <input asp-for="Input.FirstName" class="form-control" placeholder="Enter your first name" required />
+                        <label asp-for="Input.FirstName" class="form-label" for="Input_FirstName">First Name</label>
+                        <input asp-for="Input.FirstName" class="form-control" id="Input_FirstName" placeholder="Enter your first name" required />
                         <span asp-validation-for="Input.FirstName" class="text-danger"></span>
                     </div>
                     <div class="col-md-6">
-                        <label asp-for="Input.LastName" class="form-label">Last Name</label>
-                        <input asp-for="Input.LastName" class="form-control" placeholder="Enter your last name" />
+                        <label asp-for="Input.LastName" class="form-label" for="Input_LastName">Last Name</label>
+                        <input asp-for="Input.LastName" class="form-control" id="Input_LastName" placeholder="Enter your last name" />
                         <span asp-validation-for="Input.LastName" class="text-danger"></span>
                     </div>
                     <div class="col-md-6">
-                        <label asp-for="Input.PhoneNumber" class="form-label">Phone Number</label>
-                        <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Enter your Phone No" required />
+                        <label asp-for="Input.PhoneNumber" class="form-label" for="Input_PhoneNumber">Phone Number</label>
+                        <input asp-for="Input.PhoneNumber" class="form-control" id="Input_PhoneNumber" placeholder="Enter your Phone No" required />
                         <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
                     </div>
                     <div class="col-md-6">
-                        <label asp-for="Input.Email" class="form-label">Email</label>
-                        <input asp-for="Input.Email" type="email" class="form-control" placeholder="Enter your email" required autocomplete="off" />
+                        <label asp-for="Input.Email" class="form-label" for="Input_Email">Email</label>
+                        <input asp-for="Input.Email" type="email" class="form-control" id="Input_Email" placeholder="Enter your email" required autocomplete="off" />
                         <span asp-validation-for="Input.Email" class="text-danger"></span>
                     </div>
                     <div class="col-md-6">
-                        <label asp-for="Input.Password" class="form-label">Password</label>
+                        <label asp-for="Input.Password" class="form-label" for="passwordInput">Password</label>
                         <div class="password-wrapper">
-                            <input asp-for="Input.Password" type="password" class="form-control password-input" placeholder="Enter your Pword" required autocomplete="new-password" id="passwordInput" />
+                            <input asp-for="Input.Password" type="password" class="form-control password-input" id="passwordInput" placeholder="Enter your Pword" required autocomplete="new-password" />
                             <button type="button" class="toggle-password" onclick="togglePassword('passwordInput', this)">
                                 <i class="fa fa-eye"></i>
                             </button>
@@ -162,9 +168,9 @@
                         <span asp-validation-for="Input.Password" class="text-danger"></span>
                     </div>
                     <div class="col-md-6">
-                        <label asp-for="Input.ConfirmPassword" class="form-label">Confirm Password</label>
+                        <label asp-for="Input.ConfirmPassword" class="form-label" for="confirmPasswordInput">Confirm Password</label>
                         <div class="password-wrapper">
-                            <input asp-for="Input.ConfirmPassword" type="password" class="form-control password-input" placeholder="Confirm your Pword" required autocomplete="new-password" id="confirmPasswordInput" />
+                            <input asp-for="Input.ConfirmPassword" type="password" class="form-control password-input" id="confirmPasswordInput" placeholder="Confirm your Pword" required autocomplete="new-password" />
                             <button type="button" class="toggle-password" onclick="togglePassword('confirmPasswordInput', this)">
                                 <i class="fa fa-eye"></i>
                             </button>
@@ -172,9 +178,9 @@
                         <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
                     </div>
                     <div class="col-md-6">
-                        <label asp-for="Input.Gender" class="form-label">Gender</label>
+                        <label asp-for="Input.Gender" class="form-label" for="Input_Gender">Gender</label>
                         <div class="dropdown-wrapper">
-                            <select asp-for="Input.Gender" class="form-control dropdown-select" required>
+                            <select asp-for="Input.Gender" class="form-control dropdown-select" id="Input_Gender" required>
                                 <option value="">Select Gender</option>
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
@@ -185,9 +191,9 @@
                         <span asp-validation-for="Input.Gender" class="text-danger"></span>
                     </div>
                     <div class="col-md-6">
-                        <label asp-for="Input.Country" class="form-label">Country</label>
+                        <label asp-for="Input.Country" class="form-label" for="Input_Country">Country</label>
                         <div class="dropdown-wrapper">
-                            <select asp-for="Input.Country" class="form-control dropdown-select" required>
+                            <select asp-for="Input.Country" class="form-control dropdown-select" id="Input_Country" required>
                                 <option value="">Select Country</option>
                                 <option value="Afghanistan">Afghanistan</option>
                                 <option value="Albania">Albania</option>
@@ -389,8 +395,8 @@
                         <span asp-validation-for="Input.Country" class="text-danger"></span>
                     </div>
                     <div class="col-12">
-                        <label asp-for="Input.Address" class="form-label">Address</label>
-                        <textarea asp-for="Input.Address" class="form-control" rows="2" placeholder="Enter your address" required></textarea>
+                        <label asp-for="Input.Address" class="form-label" for="Input_Address">Address</label>
+                        <textarea asp-for="Input.Address" class="form-control" id="Input_Address" rows="2" placeholder="Enter your address" required></textarea>
                         <span asp-validation-for="Input.Address" class="text-danger"></span>
                     </div>
                 </div>
@@ -403,6 +409,7 @@
 </div>
 
 @section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <partial name="_ValidationScriptsPartial" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <script>
@@ -419,5 +426,14 @@
                 icon.classList.add('fa-eye');
             }
         }
+        // Registration success popup and redirect
+        $(document).ready(function () {
+            var isSuccess = '@TempData["RegisterSuccess"]' === 'True';
+            if (isSuccess) {
+                setTimeout(function () {
+                    window.location.href = '/'; // Redirect to home after 3 seconds
+                }, 3000);
+            }
+        });
     </script>
 }

@@ -19,25 +19,29 @@
         justify-content: center;
     }
     .login-card {
-        max-width: 440px;
+        max-width: 500px;
         width: 100%;
         border-radius: 28px;
         box-shadow: 0 12px 40px rgba(44, 41, 92, 0.22);
         background: rgba(255,255,255,0.40);
         backdrop-filter: blur(24px);
         padding: 2.8rem 2.2rem 2.2rem 2.2rem;
-        margin: 32px 0;
+        margin: 48px 0;
         border: 1.5px solid rgba(210,168,106,0.18);
         transition: box-shadow 0.2s;
     }
-    .login-header {
-        color: #b88a4a;
-        font-size: 2.5rem;
-        font-weight: 800;
-        letter-spacing: 1px;
+    .login-title-gradient {
+        background: linear-gradient(90deg, #ff9800 0%, #43c6ac 50%, #283593 100%);
+        color: #fff;
+        padding: 1.2rem 0;
+        border-radius: 18px;
+        font-size: 2.7rem;
+        font-weight: 900;
         text-align: center;
-        margin-bottom: 2rem;
-        text-shadow: 0 2px 8px rgba(44,41,92,0.08);
+        box-shadow: 0 4px 16px rgba(44,41,92,0.12);
+        margin-bottom: 2.2rem;
+        letter-spacing: 2px;
+        text-shadow: 0 2px 8px rgba(44,41,92,0.18);
     }
     .form-label {
         font-weight: 700;
@@ -64,9 +68,9 @@
         border-radius: 10px;
         box-shadow: 0 2px 8px rgba(44, 41, 92, 0.08);
         border: none;
-        transition: background 0.2s, box-shadow 0.2s;
         font-size: 1.2rem;
         padding: 0.7rem 0;
+        transition: background 0.2s, box-shadow 0.2s;
     }
     .btn-login:hover, .btn-login:focus {
         background: linear-gradient(90deg, #d2a86a 0%, #06c20c 100%);
@@ -123,13 +127,13 @@
     }
     @@media (max-width: 600px) {
         .login-card { max-width: 98vw; margin: 16px auto; padding: 1.2rem 0.5rem; }
-        .login-header { font-size: 1.5rem; }
+        .login-title-gradient { font-size: 1.5rem; }
     }
 </style>
 
 <div class="login-bg">
     <div class="login-card">
-        <div class="login-header">
+        <div class="login-title-gradient">
             Login
         </div>
         @if (ViewData["ShowSignUpPopup"] as bool? == true)
@@ -140,24 +144,28 @@
             </div>
         }
         <form method="post" autocomplete="off">
-            <div class="mb-3">
-                <label asp-for="Input.Email" class="form-label">Email</label>
-                <input asp-for="Input.Email" type="email" class="form-control" placeholder="Enter your email" required autocomplete="off" />
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="Input.Password" class="form-label">Password</label>
-                <div class="password-wrapper">
-                    <input asp-for="Input.Password" type="password" class="form-control password-input" placeholder="Enter your password" required autocomplete="current-password" id="loginPasswordInput" />
-                    <button type="button" class="toggle-password" onclick="togglePassword('loginPasswordInput', this)">
-                        <i class="fa fa-eye"></i>
-                    </button>
+            <div class="row g-3">
+                <div class="col-12">
+                    <label asp-for="Input.Email" class="form-label" for="Input_Email">Email</label>
+                    <input asp-for="Input.Email" type="email" class="form-control" id="Input_Email" placeholder="Enter your email" required autocomplete="off" />
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
                 </div>
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
-            </div>
-            <div class="mb-3 form-check">
-                <input asp-for="Input.RememberMe" class="form-check-input" />
-                <label asp-for="Input.RememberMe" class="form-check-label">Remember Me</label>
+                <div class="col-12">
+                    <label asp-for="Input.Password" class="form-label" for="loginPasswordInput">Password</label>
+                    <div class="password-wrapper">
+                        <input asp-for="Input.Password" type="password" class="form-control password-input" id="loginPasswordInput" placeholder="Enter your password" required autocomplete="current-password" />
+                        <button type="button" class="toggle-password" onclick="togglePassword('loginPasswordInput', this)">
+                            <i class="fa fa-eye"></i>
+                        </button>
+                    </div>
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                </div>
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="Input.RememberMe" class="form-check-input" id="Input_RememberMe" />
+                        <label asp-for="Input.RememberMe" class="form-check-label" for="Input_RememberMe">Remember Me</label>
+                    </div>
+                </div>
             </div>
             <div class="d-flex justify-content-center mt-4">
                 <button type="submit" class="btn btn-login btn-lg px-4 shadow-sm">Login</button>
@@ -170,6 +178,7 @@
 </div>
 
 @section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <partial name="_ValidationScriptsPartial" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <script>
